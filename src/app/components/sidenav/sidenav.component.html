@@ -1,0 +1,19 @@
+<div class="wrapper">
+	<nav id="sidebar">
+		<div class="sidebar-header"> <h3>Contents</h3></div>
+		<div *ngFor="let grades of gradeList ; let i = index">
+			<ul class="list-unstyled components">
+				<li>
+					<a href="#home{{i}}" data-toggle="collapse" aria-expanded="false">{{grades.gradeName}}</a>
+						<ul class="list-unstyled" id="home{{i}}">
+							<li *ngFor="let subject of grades.subjects">
+								<a href="javascript:void(0)" (click) = "openSubject(grades.gradeId, subject.id) ">{{subject.subjectName }} </a>
+							</li>
+						</ul>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div id="content"></div>
+</div>
+

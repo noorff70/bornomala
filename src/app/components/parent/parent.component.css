@@ -1,0 +1,16 @@
+/*.single-div {
+    width: 80%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 3%;
+    white-space: normal;
+}*/
+
+.single-div {
+	
+  	vertical-align: middle;
+    text-align: center;
+    white-space: normal;
+
+}

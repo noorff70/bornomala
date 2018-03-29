@@ -1,0 +1,17 @@
+<div class="row">
+	<app-header></app-header>
+</div>
+<div class="row">
+	<div class="col-sm-3">
+		<app-sidenav (changeScreen) = "changeToNewScreen($event)" (displayBody) = "displayChangeToBody($event)"></app-sidenav>
+	</div>
+	<div class="col-sm-9 single-div" *ngIf="currentscreen =='<app-body></app-body>' ">
+		<app-body (changeScreen) = "changeToNewScreen($event)"  [childTopicList] = "topicList"></app-body>
+	</div>
+	<div class="col-sm-9 single-div" *ngIf="currentscreen =='<app-mathdetail></app-mathdetail>' ">
+		<app-mathdetail></app-mathdetail>
+	</div>
+</div>
+<div class="row">
+	<app-footer></app-footer>
+</div>
