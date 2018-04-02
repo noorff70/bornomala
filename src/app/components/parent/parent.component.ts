@@ -1,4 +1,4 @@
-import {Topic} from '../../models/model';
+import {Topic, TopicDetail} from '../../models/model';
 import { CommunicationService } from '../../services/common/communication.service';
 import {Component, OnInit} from '@angular/core';
 
@@ -12,6 +12,7 @@ export class ParentComponent implements OnInit {
 
   topicList: Topic[];
   currentscreen: string;
+  parentTopic: TopicDetail;
 
   constructor() {
   }
@@ -28,6 +29,10 @@ export class ParentComponent implements OnInit {
   // user pressed from any of the submenu and wants to go back to main menu
   changeToNewScreen (screen) {
     this.currentscreen = screen;
+  }
+
+  displayTopic (tDetail) {
+    this.parentTopic = tDetail;
   }
 
 }

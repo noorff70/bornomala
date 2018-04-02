@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { TopicDetail } from '../../models/model';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-mathdetail',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./mathdetail.component.css']
 })
 export class MathdetailComponent implements OnInit {
+
+  @Input() childTopic: TopicDetail;
 
   constructor() { }
 
