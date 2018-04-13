@@ -1,6 +1,6 @@
 import {Topic, TopicDetail} from '../../models/model';
 import { CommunicationService } from '../../services/common/communication.service';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 
 @Component({
   selector: 'app-parent',
@@ -13,6 +13,7 @@ export class ParentComponent implements OnInit {
   topicList: Topic[];
   currentscreen: string;
   parentTopic: TopicDetail;
+  studentGrade: any;
 
   constructor() {
   }
@@ -33,6 +34,10 @@ export class ParentComponent implements OnInit {
 
   displayTopic (tDetail) {
     this.parentTopic = tDetail;
+  }
+
+  setStudentGrade (grade) {
+    this.studentGrade = grade;
   }
 
 }

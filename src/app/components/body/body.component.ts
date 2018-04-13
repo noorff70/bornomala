@@ -34,7 +34,7 @@ export class BodyComponent implements OnInit {
     this.tDetail.topicDetailName = name;
 
     this.changeScreen.emit('<app-mathdetail></app-mathdetail>');
-    console.log('name: ' + name + ' id: ' + id);
+
     this.topicDetail.emit(this.tDetail);
   }
 

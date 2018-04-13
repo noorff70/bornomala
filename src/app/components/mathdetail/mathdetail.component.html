@@ -1,3 +1,78 @@
-<p>
-  mathdetail works! {{childTopic.topicDetailName}}
-</p>
+<div *ngIf="!firstPage" class="col-sm-8">
+	<div>{{childTopic.topicDetailName}}</div>
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div *ngIf="questionType != 'FRACTION'">
+					<div *ngFor="let qLine of questionLines; let i = index">
+						<span *ngIf="qLine.format == null"> <app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax> </span> 
+						<span *ngIf="qLine.format == 'RADIOTYPE'"> <input type="radio" name="optradio" [value]="qLine.questionLn" (change)="onSelectionChange(qLine.questionLn)"> 
+							<app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax>
+						</span>
+					</div>
+				</div>
+				<div *ngIf="questionType == 'FRACTION'">
+					<div *ngFor="let quLine of questionLines; let i = index">
+						<span><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></span>
+					</div>
+					<div>
+						<input type="text" name = "userInput" class="form-control" id="userInput" [(ngModel)]="userInput">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="showAnswerPanel" class="row">
+		<div class="panel panel-default {{borderColor}}">
+			<div class="panel-body">
+				<div class="col-sm-6">Answer: {{answer}}</div>
+				<div *ngIf="correctAnswer" class="glyphicon glyphicon-ok col-sm-6" aria-hidden="true" style="color:green"></div>
+				<div *ngIf="!correctAnswer" class="glyphicon glyphicon-remove col-sm-6" aria-hidden="true" style="color:red"></div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="panel panel-default noBorder">
+			<button type="button" class="btn btn-primary" (click)="checkAnswer()">Check</button>
+			<button type="button" class="btn btn-primary" (click)="nextButtonOnClick()">Next</button>
+		</div>
+	</div>
+
+</div>
+
+
+<div *ngIf="!firstPage" class="col-sm-4">
+	<div class="panel-group" id="accordion">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse1"> Score</a> </h4>
+			</div>
+			<div id="collapse1" class="panel-collapse collapse in">
+				<div class="panel-body">Score</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse2"> Hints</a> </h4>
+			</div>
+			<div id="collapse2" class="panel-collapse collapse">
+				<div class="panel-body">Hints</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse3"> Something Else</a> </h4>
+			</div>
+			<div id="collapse3" class="panel-collapse collapse">
+				<div class="panel-body">Something Else</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="firstPage" class="col-sm-8">
+	{{topic}}
+</div>
+<div *ngIf="firstPage" class="col-sm-4">
+	<button type="button" class="btn btn-primary" (click)="nextButtonOnClick()">Start Practice</button>
+</div>

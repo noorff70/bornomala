@@ -1,0 +1,10 @@
+.correct {
+	border-color: green;
+}
+.wrong {
+	border-color: red;
+}
+
+.noBorder {
+	border: 0;
+}

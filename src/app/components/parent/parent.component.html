@@ -3,13 +3,21 @@
 </div>
 <div class="row">
 	<div class="col-sm-3">
-		<app-sidenav (changeScreen) = "changeToNewScreen($event)" (displayBody) = "displayChangeToBody($event)"></app-sidenav>
+		<app-sidenav (changeScreen) = "changeToNewScreen($event)"
+			(studentGrade) = "setStudentGrade($event)" 
+			(displayBody) = "displayChangeToBody($event)">
+		</app-sidenav>
 	</div>
 	<div class="col-sm-9 single-div" *ngIf="currentscreen =='<app-body></app-body>' ">
-		<app-body (changeScreen) = "changeToNewScreen($event)" (topicDetail) = "displayTopic($event)" [childTopicList] = "topicList"></app-body>
+		<app-body (changeScreen) = "changeToNewScreen($event)" 
+			(topicDetail) = "displayTopic($event)"
+			[childTopicList] = "topicList">
+		</app-body>
 	</div>
 	<div class="col-sm-9 single-div" *ngIf="currentscreen =='<app-mathdetail></app-mathdetail>' ">
-		<app-mathdetail [childTopic] = "parentTopic"></app-mathdetail>
+		<app-mathdetail [childTopic] = "parentTopic"
+			[studentGradeinChild] = "studentGrade">	
+		</app-mathdetail>
 	</div>
 </div>
 <div class="row">

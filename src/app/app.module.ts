@@ -14,6 +14,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { MenuService } from './services/menuservice/menu.service';
 import { MathdetailComponent } from './components/mathdetail/mathdetail.component';
+import { MathjaxComponent } from './common/mathjax/mathjax.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,11 +26,13 @@ import { MathdetailComponent } from './components/mathdetail/mathdetail.componen
     HeaderComponent,
     FooterComponent,
     MathdetailComponent,
+    MathjaxComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpModule,
+    FormsModule
   ],
   providers: [MenuService],
   bootstrap: [AppComponent]

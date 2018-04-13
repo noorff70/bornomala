@@ -16,11 +16,33 @@ export class GradeSubject {
 }
 
 export class Topic {
-  topicName ?: string;
-  topicDetail ?: TopicDetail[];
+  topicName?: string;
+  topicDetail?: TopicDetail[];
 }
 
 export class TopicDetail {
-  topicDetailName ?: string;
-  topicDetailsId ?: number
+  topicDetailName?: string;
+  topicDetailsId?: number
+}
+
+export class Answer {
+  answer: string;
+  type: string;
+  answerOption: string;
+  noOfCorrectAnswer: number
+}
+
+export class QuestionLine {
+  questionLn: string;
+  format: string
+}
+
+export class Problem {
+  rank: number;
+  questionHeading: string;
+  questionSubHeading: string;
+  picturePath: string;
+  questionLines: QuestionLine[];
+  answer: Answer;
+  geometryObject: any
 }

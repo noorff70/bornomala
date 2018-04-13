@@ -25,6 +25,7 @@ export class SidenavComponent implements OnInit {
   topics: any[];
   @Output() displayBody = new EventEmitter();
   @Output() changeScreen = new EventEmitter<string>();
+  @Output() studentGrade = new EventEmitter<any>();
 
   constructor(
     private menuService: MenuService,
@@ -57,6 +58,7 @@ export class SidenavComponent implements OnInit {
     this.selectedGradeSubject.subjectId = subjectId;
 
     this.invokeSubmenu(this.selectedGradeSubject);
+    this.studentGrade.emit(this.selectedGradeSubject.gradeId);
 
    // this.changeScreens.emit('<app-body></app-body>');
 
