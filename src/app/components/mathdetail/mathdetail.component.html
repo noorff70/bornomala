@@ -6,8 +6,13 @@
 				<div *ngIf="questionType != 'FRACTION'">
 					<div *ngFor="let qLine of questionLines; let i = index">
 						<span *ngIf="qLine.format == null"> <app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax> </span> 
-						<span *ngIf="qLine.format == 'RADIOTYPE'"> <input type="radio" name="optradio" [value]="qLine.questionLn" (change)="onSelectionChange(qLine.questionLn)"> 
+			<!--  		<span *ngIf="qLine.format == 'RADIOTYPE'"> <input type="radio" name="optradio" [value]="qLine.questionLn"> 
 							<app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax>
+						</span>-->
+					</div>
+					<div *ngFor="let aLine of answerLines let i = index">
+						<span *ngIf="aLine.format == 'RADIOTYPE'"> <input type="radio" name="optradio" [value]="aLine.answerLn" (change)="onSelectionChange(aLine.answerLn)"> 
+							<app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
 						</span>
 					</div>
 				</div>
@@ -25,7 +30,7 @@
 	<div *ngIf="showAnswerPanel" class="row">
 		<div class="panel panel-default {{borderColor}}">
 			<div class="panel-body">
-				<div class="col-sm-6">Answer: {{answer}}</div>
+				<div class="col-sm-6" ><span> <app-mathjax [inputMathJax]="answer"></app-mathjax></span></div>
 				<div *ngIf="correctAnswer" class="glyphicon glyphicon-ok col-sm-6" aria-hidden="true" style="color:green"></div>
 				<div *ngIf="!correctAnswer" class="glyphicon glyphicon-remove col-sm-6" aria-hidden="true" style="color:red"></div>
 			</div>

@@ -1,4 +1,4 @@
-import {TopicDetail, Problem, QuestionLine} from '../../models/model';
+import {TopicDetail, Problem, QuestionLine, AnswerLine} from '../../models/model';
 import { MathdetailService } from '../../services/mathdetail/mathdetail.service';
 import {Component, OnInit, Input} from '@angular/core';
 
@@ -16,6 +16,7 @@ export class MathdetailComponent implements OnInit {
   problemList: Problem[];
   currentIndexToShow = 0;
   questionLines: QuestionLine[];
+  answerLines: any[];
   selectedAnswer: string;
   answer: string;
   showAnswerPanel: boolean;
@@ -51,6 +52,7 @@ export class MathdetailComponent implements OnInit {
     this.firstPage = false;
     this.questionLines = this.problemList[this.currentIndexToShow].questionLines;
     this.answer = this.problemList[this.currentIndexToShow].answer.answer;
+    this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
     this.questionType = this.problemList[this.currentIndexToShow].answer.type;
     this.currentIndexToShow++;
     this.userInput = '';

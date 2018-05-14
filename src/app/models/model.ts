@@ -29,11 +29,17 @@ export class Answer {
   answer: string;
   type: string;
   answerOption: string;
-  noOfCorrectAnswer: number
+  noOfCorrectAnswer: number;
+  answerList: string[]
 }
 
 export class QuestionLine {
   questionLn: string;
+  format: string
+}
+
+export class AnswerLine {
+  answerLn: string;
   format: string
 }
 
