@@ -50,5 +50,6 @@ export class Problem {
   picturePath: string;
   questionLines: QuestionLine[];
   answer: Answer;
-  geometryObject: any
+  geometryObject: any;
+  questionType: any
 }

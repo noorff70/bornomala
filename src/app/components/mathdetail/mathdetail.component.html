@@ -3,26 +3,27 @@
 	<div class="row">
 		<div class="panel panel-default">
 			<div class="panel-body">
-				<div *ngIf="questionType != 'FRACTION'">
+				<div *ngIf="questionType === 'FRACTION'">
 					<div *ngFor="let qLine of questionLines; let i = index">
-						<span *ngIf="qLine.format == null"> <app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax> </span> 
+						 <app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax>  
 			<!--  		<span *ngIf="qLine.format == 'RADIOTYPE'"> <input type="radio" name="optradio" [value]="qLine.questionLn"> 
 							<app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax>
 						</span>-->
 					</div>
-					<div *ngFor="let aLine of answerLines let i = index">
-						<span *ngIf="aLine.format == 'RADIOTYPE'"> <input type="radio" name="optradio" [value]="aLine.answerLn" (change)="onSelectionChange(aLine.answerLn)"> 
-							<app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
-						</span>
-					</div>
-				</div>
-				<div *ngIf="questionType == 'FRACTION'">
-					<div *ngFor="let quLine of questionLines; let i = index">
-						<span><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></span>
-					</div>
 					<div>
 						<input type="text" name = "userInput" class="form-control" id="userInput" [(ngModel)]="userInput">
 					</div>
+				</div>
+				<div *ngIf="questionType == 'RADIOTYPE'">
+					<div *ngFor="let quLine of questionLines; let i = index">
+						<span><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></span>
+					</div>
+					<div *ngFor="let aLine of answerLines let i = index">
+						<input type="radio" name="optradio" [value]="aLine.answerLn" (change)="onSelectionChange(aLine.answerLn)"> <app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
+					</div>
+			<!--  		<div>
+						<input type="text" name = "userInput" class="form-control" id="userInput" [(ngModel)]="userInput">
+					</div> -->
 				</div>
 			</div>
 		</div>

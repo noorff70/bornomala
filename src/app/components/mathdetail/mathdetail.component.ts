@@ -53,7 +53,7 @@ export class MathdetailComponent implements OnInit {
     this.questionLines = this.problemList[this.currentIndexToShow].questionLines;
     this.answer = this.problemList[this.currentIndexToShow].answer.answer;
     this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
-    this.questionType = this.problemList[this.currentIndexToShow].answer.type;
+    this.questionType = this.problemList[this.currentIndexToShow].questionType;
     this.currentIndexToShow++;
     this.userInput = '';
     this.showAnswerPanel = false;
