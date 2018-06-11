@@ -1,6 +1,5 @@
 import {Common} from '../../common/Common';
 import {Grade, GradeSubject, Topic, TopicDetail} from '../../models/model';
-import { CommunicationService } from '../../services/common/communication.service';
 import {MenuService} from '../../services/menuservice/menu.service';
 import {TopicService} from '../../services/topicservice/topic.service';
 import {ParentComponent} from '../parent/parent.component';
@@ -13,7 +12,7 @@ import {Subscription} from 'rxjs';
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css'],
-  providers: [MenuService, TopicService, CommunicationService]
+  providers: [MenuService, TopicService]
 })
 export class SidenavComponent implements OnInit {
 
@@ -30,7 +29,6 @@ export class SidenavComponent implements OnInit {
   constructor(
     private menuService: MenuService,
     private topicService: TopicService,
-    private comService: CommunicationService
   ) {
   }
 

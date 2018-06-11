@@ -1,12 +1,10 @@
 import {Topic, TopicDetail} from '../../models/model';
-import { CommunicationService } from '../../services/common/communication.service';
 import {Component, OnInit, Input} from '@angular/core';
 
 @Component({
   selector: 'app-parent',
   templateUrl: './parent.component.html',
   styleUrls: ['./parent.component.css'],
-  providers: [CommunicationService]
 })
 export class ParentComponent implements OnInit {
 

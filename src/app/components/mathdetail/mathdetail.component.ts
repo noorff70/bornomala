@@ -1,6 +1,6 @@
 import {TopicDetail, Problem, QuestionLine, AnswerLine} from '../../models/model';
 import { MathdetailService } from '../../services/mathdetail/mathdetail.service';
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, AfterViewInit, ElementRef} from '@angular/core';
 
 @Component({
   selector: 'app-mathdetail',
@@ -8,7 +8,8 @@ import {Component, OnInit, Input} from '@angular/core';
   styleUrls: ['./mathdetail.component.css'],
   providers: [MathdetailService]
 })
-export class MathdetailComponent implements OnInit {
+export class MathdetailComponent implements OnInit, AfterViewInit {
+
   MathJax: any;
 
   @Input() childTopic: TopicDetail;
@@ -25,15 +26,33 @@ export class MathdetailComponent implements OnInit {
   topic: string;
   questionType: string;
   userInput: string;
-  borderColor: string
+  borderColor: string;
+  hideTextBox = true;
+  imageLine: any;
 
-  constructor(private mathDetail: MathdetailService,
+
+  constructor(private mathDetail: MathdetailService, private elementRef: ElementRef
      ) {}
 
   ngOnInit() {
     this.showAnswerPanel = false;
     this.firstPage = true;
     this.invokeMathDetail();
+
+  /*  const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = './assets/GeoImage.js';
+    this.elementRef.nativeElement.getAttribute('jsonImage');
+    this.elementRef.nativeElement.appendChild(s); */
+  }
+
+  ngAfterViewInit(): void {
+
+   /* const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = './assets/GeoImage.js';
+    this.elementRef.nativeElement.getAttribute('jsonImage');
+    this.elementRef.nativeElement.appendChild(s); */
   }
 
   invokeMathDetail() {
@@ -57,6 +76,15 @@ export class MathdetailComponent implements OnInit {
     this.currentIndexToShow++;
     this.userInput = '';
     this.showAnswerPanel = false;
+
+    this.imageLine = JSON.stringify(this.questionLines[0].questionLn).replace(/\\/g, '');
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = './assets/GeoImage.js';
+   // this.elementRef.nativeElement.getAttribute('jsonImage');
+    this.elementRef.nativeElement.appendChild(s);
+
+
   }
 
   checkAnswer() {
@@ -88,5 +116,6 @@ export class MathdetailComponent implements OnInit {
   onSelectionChange(selectedItem) {
     this.selectedAnswer = selectedItem;
   }
+
 
 }

@@ -1,6 +1,5 @@
 import {Common} from '../../common/Common';
 import {GradeSubject, Topic, TopicDetail} from '../../models/model';
-import {CommunicationService} from '../../services/common/communication.service';
 import {ParentComponent} from '../parent/parent.component';
 import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
 import {Subscription} from 'rxjs';
@@ -10,7 +9,6 @@ import {Subscription} from 'rxjs';
   selector: 'app-body',
   templateUrl: './body.component.html',
   styleUrls: ['./body.component.css'],
-  providers: [CommunicationService]
 })
 export class BodyComponent implements OnInit {
 
@@ -21,7 +19,7 @@ export class BodyComponent implements OnInit {
   @Output() topicDetail = new EventEmitter<TopicDetail>(); // child to Parent
   tDetail: TopicDetail;
 
-  constructor(private comService: CommunicationService) {
+  constructor() {
   }
 
   ngOnInit() {
