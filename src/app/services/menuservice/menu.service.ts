@@ -1,7 +1,8 @@
+
+import {throwError as observableThrowError, Observable} from 'rxjs';
 import {Grade} from '../../models/model';
 import {Injectable} from '@angular/core';
 import {Http, Headers, Response, RequestOptions} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 // import 'rxjs/add/operator/map'
 import 'rxjs/Rx';
 
@@ -22,7 +23,7 @@ export class MenuService {
   }
 
   handleError(error: Response) {
-    return Observable.throw(error.json().error || 'Server error');
+    return observableThrowError(error.json().error || 'Server error');
   }
 }
 

@@ -1,4 +1,4 @@
-# Agular4Seed
+# bornomala
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.2.0.
 
@@ -26,3 +26,16 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+---------------------- [Not sure why this is not showing in package.json] -------------------------------
+1. npm install --save @angular/animations
+
+---------------------- GRUNT Commands ---------------------------
+1. Create a ng build with the following command
+	C:\workspaces\tpcs\TPCS-Mobile>ng build --base-href=/TPCS-Mobile/
+	
+2. Create a war file using GRUNT
+	C:\workspaces\tpcs\TPCS-Mobile>grunt --gruntfile grunt-war.js war
+	
+3. Deploy to local WebSphere Server and run 
+	http://localhost:9080/TPCS-Mobile
