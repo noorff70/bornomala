@@ -6,7 +6,8 @@
 </div>
 -->
 
-<div *ngIf="!firstPage" class="col-sm-8">
+<!-- <div *ngIf="!firstPage" class="col-sm-8"> -->
+<div [hidden]="firstPage" class="col-sm-8">
 	<div>{{childTopic.topicDetailName}}</div>
 	<div class="row">
 		<div class="panel panel-default">
@@ -27,13 +28,17 @@
 						<input type="radio" name="optradio" [value]="aLine.answerLn" (change)="onSelectionChange(aLine.answerLn)"> <app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
 					</div>
 				</div>
-				<div *ngIf="questionType == 'PIPLOT'">
-					<div *ngFor="let quLine of questionLines; let i = index">
-						<div id="image"></div>
-							<input type="text" class="form-control" id="id_image" [(ngModel)]="imageLine" >
+				<div #image *ngIf="questionType == 'PIPLOT'">
+					<div id="image">
+						<input  type="hidden" class="form-control" id="id_image" name="id_image" [(ngModel)]="imageLine" >
+					</div>
+					<div *ngFor="let quLine of questionLines; let i = index"><br>
+						<span><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></span><br>
+					</div>
+					<div>
+						<input #image type="text" name = "userInput" class="form-control" id="userInput" [(ngModel)]="userInput">
 					</div>
 				</div>
-				
 			</div>
 		</div>
 	</div>
@@ -49,14 +54,15 @@
 	<div class="row">
 		<div class="panel panel-default noBorder">
 			<button type="button" class="btn btn-primary" (click)="checkAnswer()">Check</button>
-			<button type="button" class="btn btn-primary" (click)="nextButtonOnClick()">Next</button>
+			<button type="button" class="btn btn-primary" (click)=" nextButtonOnClick()">Next</button>
 		</div>
 	</div>
 
 </div>
 
 
-<div *ngIf="!firstPage" class="col-sm-4">
+<!-- <div *ngIf="!firstPage" class="col-sm-4"> -->
+<div [hidden]="firstPage" class="col-sm-4">
 	<div class="panel-group" id="accordion">
 		<div class="panel panel-default">
 			<div class="panel-heading">

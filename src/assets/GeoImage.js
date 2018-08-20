@@ -9,6 +9,5 @@
 	  jsonImage = jsonImage.substr(1);
 	  jsonImage = jsonImage.slice(0, -1)
 
-
 	  mpld3.draw_figure("image", JSON.parse(jsonImage));
   } 

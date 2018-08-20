@@ -1,6 +1,6 @@
 import {TopicDetail, Problem, QuestionLine, AnswerLine} from '../../models/model';
-import { MathdetailService } from '../../services/mathdetail/mathdetail.service';
-import {Component, OnInit, Input, AfterViewInit, ElementRef} from '@angular/core';
+import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
+import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, Renderer2} from '@angular/core';
 
 @Component({
   selector: 'app-mathdetail',
@@ -8,7 +8,7 @@ import {Component, OnInit, Input, AfterViewInit, ElementRef} from '@angular/core
   styleUrls: ['./mathdetail.component.css'],
   providers: [MathdetailService]
 })
-export class MathdetailComponent implements OnInit, AfterViewInit {
+export class MathdetailComponent implements OnInit {
 
   MathJax: any;
 
@@ -29,31 +29,24 @@ export class MathdetailComponent implements OnInit, AfterViewInit {
   borderColor: string;
   hideTextBox = true;
   imageLine: any;
+  @ViewChild('image') image: ElementRef;
+  showPiPlot: boolean;
+  script: any
 
+  constructor(private mathDetail: MathdetailService, private elementRef: ElementRef) {
 
-  constructor(private mathDetail: MathdetailService, private elementRef: ElementRef
-     ) {}
+  }
 
   ngOnInit() {
     this.showAnswerPanel = false;
     this.firstPage = true;
+
+    this.script = document.createElement('script');
+    this.elementRef.nativeElement.appendChild(this.script);
+
     this.invokeMathDetail();
-
-  /*  const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = './assets/GeoImage.js';
-    this.elementRef.nativeElement.getAttribute('jsonImage');
-    this.elementRef.nativeElement.appendChild(s); */
   }
 
-  ngAfterViewInit(): void {
-
-   /* const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = './assets/GeoImage.js';
-    this.elementRef.nativeElement.getAttribute('jsonImage');
-    this.elementRef.nativeElement.appendChild(s); */
-  }
 
   invokeMathDetail() {
     this.mathDetail.getMathDetail(this.childTopic.topicDetailsId, this.studentGradeinChild).subscribe(
@@ -77,14 +70,18 @@ export class MathdetailComponent implements OnInit, AfterViewInit {
     this.userInput = '';
     this.showAnswerPanel = false;
 
-    this.imageLine = JSON.stringify(this.questionLines[0].questionLn).replace(/\\/g, '');
-    const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = './assets/GeoImage.js';
-   // this.elementRef.nativeElement.getAttribute('jsonImage');
-    this.elementRef.nativeElement.appendChild(s);
+    if (this.questionType === 'PIPLOT') {
+      this.showPiPlot = true;
+    } else {
+      this.showPiPlot = false;
+    }
 
-
+    if (this.questionType === 'PIPLOT') {
+      this.imageLine = JSON.stringify(this.questionLines[0].questionLn).replace(/\\/g, '');
+      this.questionLines = this.questionLines.slice(1, this.questionLines.length);
+      this.script.type = 'text/javascript';
+      this.script.src = './assets/GeoImage.js';
+    }
   }
 
   checkAnswer() {
@@ -97,11 +94,19 @@ export class MathdetailComponent implements OnInit, AfterViewInit {
         this.correctAnswer = false;
       }
     } else if (this.userInput != null) {
-      if (this.userInput === this.answer) {
+
+      if (parseFloat(this.userInput) === parseFloat(this.answer)) {
         this.correctAnswer = true;
       } else {
         this.correctAnswer = false;
       }
+
+
+      /*   if (this.userInput === this.answer) {
+           this.correctAnswer = true;
+         } else {
+           this.correctAnswer = false;
+         }*/
     }
 
     if (this.correctAnswer) {
@@ -116,6 +121,5 @@ export class MathdetailComponent implements OnInit, AfterViewInit {
   onSelectionChange(selectedItem) {
     this.selectedAnswer = selectedItem;
   }
-
 
 }
