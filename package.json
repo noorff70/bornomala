@@ -31,16 +31,19 @@
     "@types/mathjax": "0.0.32",
     "bootstrap": "3.3.7",
     "core-js": "^2.4.1",
+    "jquery": "^3.3.1",
     "ng-katex": "^1.0.3",
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.2.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "~0.6.8",
     "@angular/cli": "^6.0.8",
     "@angular/language-service": "^6.0.6",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
+    "@types/jquery": "^3.3.6",
     "@types/node": "~6.0.60",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
@@ -54,7 +57,6 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
-    "typescript": "~2.7.2",
-    "@angular-devkit/build-angular": "~0.6.8"
+    "typescript": "~2.7.2"
   }
 }

@@ -1,6 +1,7 @@
 import {TopicDetail, Problem, QuestionLine, AnswerLine} from '../../models/model';
 import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
-import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, Renderer2} from '@angular/core';
+import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-mathdetail',
@@ -34,16 +35,15 @@ export class MathdetailComponent implements OnInit {
   script: any
 
   constructor(private mathDetail: MathdetailService, private elementRef: ElementRef) {
-
   }
 
   ngOnInit() {
     this.showAnswerPanel = false;
     this.firstPage = true;
-
-    this.script = document.createElement('script');
-    this.elementRef.nativeElement.appendChild(this.script);
-
+    
+    
+    //this.testScript= document.createElement('script');
+    
     this.invokeMathDetail();
   }
 
@@ -61,6 +61,7 @@ export class MathdetailComponent implements OnInit {
   }
 
   nextButtonOnClick() {
+
     this.firstPage = false;
     this.questionLines = this.problemList[this.currentIndexToShow].questionLines;
     this.answer = this.problemList[this.currentIndexToShow].answer.answer;
@@ -70,6 +71,7 @@ export class MathdetailComponent implements OnInit {
     this.userInput = '';
     this.showAnswerPanel = false;
 
+
     if (this.questionType === 'PIPLOT') {
       this.showPiPlot = true;
     } else {
@@ -77,11 +79,37 @@ export class MathdetailComponent implements OnInit {
     }
 
     if (this.questionType === 'PIPLOT') {
-      this.imageLine = JSON.stringify(this.questionLines[0].questionLn).replace(/\\/g, '');
-      this.questionLines = this.questionLines.slice(1, this.questionLines.length);
-      this.script.type = 'text/javascript';
-      this.script.src = './assets/GeoImage.js';
+
+      for (let i = 0; i < this.questionLines.length; i++) {
+
+        this.loadScript()
+
+        this.imageLine = JSON.stringify(this.questionLines[i].questionLn).replace(/\\/g, '');
+        this.questionLines = this.questionLines.slice(1, this.questionLines.length);
+
+      }
+
     }
+  }
+  
+  loadScript() {
+
+    let imagex = document.getElementById("image")
+
+    if (null != imagex) {
+      document.getElementById("image").innerHTML = null
+      this.removeImage()
+    }
+    
+    this.script = document.createElement('script');
+    this.elementRef.nativeElement.appendChild(this.script);
+
+    this.script.type = 'text/javascript';
+    this.script.src = './assets/GeoImage.js';
+  }
+  
+  removeImage() {
+
   }
 
   checkAnswer() {
