@@ -35,7 +35,8 @@ export class Answer {
 
 export class QuestionLine {
   questionLn: string;
-  format: string
+  format: string;
+  latexFormat: string
 }
 
 export class AnswerLine {
@@ -52,4 +53,11 @@ export class Problem {
   answer: Answer;
   geometryObject: any;
   questionType: any
+}
+
+export class MultipleQuestion {
+  question: string;
+  answer: string;
+  label: string;
+  lookAndFeel: string;
 }

@@ -1,4 +1,4 @@
-import {TopicDetail, Problem, QuestionLine, AnswerLine} from '../../models/model';
+import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion} from '../../models/model';
 import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as $ from 'jquery';
@@ -17,7 +17,10 @@ export class MathdetailComponent implements OnInit {
   @Input() studentGradeinChild: any;
   problemList: Problem[];
   currentIndexToShow = 0;
+  tempQuestionLines: QuestionLine[];
   questionLines: QuestionLine[];
+  tempQuestionList: any[];
+  questionList: MultipleQuestion[];
   answerLines: any[];
   selectedAnswer: string;
   answer: string;
@@ -27,14 +30,17 @@ export class MathdetailComponent implements OnInit {
   topic: string;
   questionType: string;
   userInput: string;
+  userInputs: string[];
   borderColor: string;
   hideTextBox = true;
   imageLine: any;
-  @ViewChild('image') image: ElementRef;
   showPiPlot: boolean;
   script: any
+  
 
   constructor(private mathDetail: MathdetailService, private elementRef: ElementRef) {
+    this.questionList = [];
+    this.questionLines = [];
   }
 
   ngOnInit() {
@@ -61,16 +67,17 @@ export class MathdetailComponent implements OnInit {
   }
 
   nextButtonOnClick() {
-
+    this.questionList = [];
     this.firstPage = false;
-    this.questionLines = this.problemList[this.currentIndexToShow].questionLines;
+    this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
     this.answer = this.problemList[this.currentIndexToShow].answer.answer;
     this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
     this.questionType = this.problemList[this.currentIndexToShow].questionType;
     this.currentIndexToShow++;
     this.userInput = '';
     this.showAnswerPanel = false;
-
+    this.userInputs = []
+    this.questionLines = [];
 
     if (this.questionType === 'PIPLOT') {
       this.showPiPlot = true;
@@ -79,17 +86,13 @@ export class MathdetailComponent implements OnInit {
     }
 
     if (this.questionType === 'PIPLOT') {
+      this.loadScript();
+      this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
 
-      for (let i = 0; i < this.questionLines.length; i++) {
-
-        this.loadScript()
-
-        this.imageLine = JSON.stringify(this.questionLines[i].questionLn).replace(/\\/g, '');
-        this.questionLines = this.questionLines.slice(1, this.questionLines.length);
-
-      }
-
+      this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
+      
     }
+    this.checkForMultipleQuestions();
   }
   
   loadScript() {
@@ -121,20 +124,16 @@ export class MathdetailComponent implements OnInit {
       } else {
         this.correctAnswer = false;
       }
-    } else if (this.userInput != null) {
+    } else if (this.userInput != null && this.userInputs.length == 0) {
 
       if (parseFloat(this.userInput) === parseFloat(this.answer)) {
         this.correctAnswer = true;
       } else {
         this.correctAnswer = false;
       }
-
-
-      /*   if (this.userInput === this.answer) {
-           this.correctAnswer = true;
-         } else {
-           this.correctAnswer = false;
-         }*/
+    } else if (this.userInputs.length >0) {
+      this.showAnswerPanel = false;
+      this.isMultipleQuestionCorrect();
     }
 
     if (this.correctAnswer) {
@@ -148,6 +147,49 @@ export class MathdetailComponent implements OnInit {
 
   onSelectionChange(selectedItem) {
     this.selectedAnswer = selectedItem;
+  }
+  
+  checkForMultipleQuestions () {
+    for (let i=0; i< this.tempQuestionLines.length; i++) {
+      if (this.tempQuestionLines[i].latexFormat === 'MULTIPLE_QUESTION'){
+        let question = this.tempQuestionLines[i].questionLn;
+        this.keyValueQuestionList(question);
+      } else {
+        let question = this.tempQuestionLines[i];
+        this.questionLines.push(question);
+      }
+    }
+  }
+  
+  keyValueQuestionList (qst) {
+    let mp = new MultipleQuestion();
+    let input = qst.split('answer');
+    let question = input[0]
+    let answer = input[1];
+    mp.question = question;
+    mp.answer = answer;
+    this.questionList.push(mp);
+  }
+  
+  isQuestionList () {
+    if (this.questionList.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  isMultipleQuestionCorrect() {
+    console.log('');
+    for (let i=0; i< this.questionList.length; i++) {
+      if (this.questionList[i].answer.trim() == this.userInputs[i]) {
+        this.questionList[i].label = 'Correct';
+        this.questionList[i].lookAndFeel = 'label label-success'
+      } else {
+        this.questionList[i].label = 'Wrong';
+        this.questionList[i].lookAndFeel = 'label label-danger'
+      }
+    }
   }
 
 }

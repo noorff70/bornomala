@@ -9,7 +9,9 @@
 <!-- <div *ngIf="!firstPage" class="col-sm-8"> -->
 <input type="hidden" name="id_image"  id="id_image"  [(ngModel)]="imageLine" >
 <div [hidden]="firstPage" class="col-sm-8">
-	<div>{{childTopic.topicDetailName}}</div>
+	<div class="control-group">
+    	<span class="label label-info full-width">{{childTopic.topicDetailName}}</span>
+	</div>
 	<div class="row">
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -35,7 +37,14 @@
 					<div *ngFor="let quLine of questionLines; let i = index"><br>
 						<span><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></span><br>
 					</div>
-					<div>
+					<div *ngIf= "isQuestionList()">
+						<div class = "row" *ngFor="let qst of questionList; let i = index">
+							<div class="col-sm-6"><span><app-mathjax [inputMathJax]="questionList[i].question"></app-mathjax></span></div>
+							<div class="col-sm-4" ><input type="text" name = "userInputs" class="form-control" id="userInputs" [(ngModel)]="userInputs[i]"></div>
+							<div class="col-sm-2" ><span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span></div>
+						</div>
+					</div>
+					<div *ngIf= "!isQuestionList()">
 						<input type="text" name = "userInput" class="form-control" id="userInput" [(ngModel)]="userInput">
 					</div>
 				</div>
