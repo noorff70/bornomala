@@ -22,7 +22,8 @@ export class Topic {
 
 export class TopicDetail {
   topicDetailName?: string;
-  topicDetailsId?: number
+  topicDetailsId?: number;
+  topicName: string;
 }
 
 export class Answer {
@@ -60,4 +61,11 @@ export class MultipleQuestion {
   answer: string;
   label: string;
   lookAndFeel: string;
+}
+
+export class Score{
+  correct: number;
+  wrong: number;
+  total: number;
+  remaining: number;
 }

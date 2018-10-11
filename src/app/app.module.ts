@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     MathdetailComponent,
-    MathjaxComponent,
+    MathjaxComponent
   ],
   imports: [
     BrowserModule,

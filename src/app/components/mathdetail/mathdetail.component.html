@@ -25,7 +25,7 @@
 				</div>
 				<div *ngIf="questionType == 'RADIOTYPE'">
 					<div *ngFor="let quLine of questionLines; let i = index">
-						<span><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></span>
+						<span><label><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></label></span>
 					</div>
 					<div *ngFor="let aLine of answerLines let i = index">
 						<input type="radio" name="optradio" [value]="aLine.answerLn" (change)="onSelectionChange(aLine.answerLn)"> <app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
@@ -35,12 +35,12 @@
 					<div  id="image">
 					</div>
 					<div *ngFor="let quLine of questionLines; let i = index"><br>
-						<span><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></span><br>
+						<span><label><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></label></span><br>
 					</div>
 					<div *ngIf= "isQuestionList()">
 						<div class = "row" *ngFor="let qst of questionList; let i = index">
-							<div class="col-sm-6"><span><app-mathjax [inputMathJax]="questionList[i].question"></app-mathjax></span></div>
-							<div class="col-sm-4" ><input type="text" name = "userInputs" class="form-control" id="userInputs" [(ngModel)]="userInputs[i]"></div>
+							<div class="col-sm-6"><span><label><app-mathjax [inputMathJax]="questionList[i].question"></app-mathjax></label></span></div>
+							<div class="col-sm-4"><input type="text" name = "userInputs" class="form-control" id="userInputs" [(ngModel)]="userInputs[i]"></div>
 							<div class="col-sm-2" ><span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span></div>
 						</div>
 					</div>
@@ -78,7 +78,11 @@
 				<h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse1"> Score</a> </h4>
 			</div>
 			<div id="collapse1" class="panel-collapse collapse in">
-				<div class="panel-body">Score</div>
+				<div class="panel-body">
+					<span><label>Correct: {{score.correct}}</label></span><br>
+					<span><label>Incorrect: {{score.wrong}}</label></span><br>
+					<span><label>Total: {{score.total}}</label></span>
+				</div>
 			</div>
 		</div>
 		<div class="panel panel-default">
