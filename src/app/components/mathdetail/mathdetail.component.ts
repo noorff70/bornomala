@@ -1,5 +1,6 @@
-import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score} from '../../models/model';
+import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson} from '../../models/model';
 import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
+import { PagerService } from "../../services/pagerservice/pager.service";
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
 import * as $ from 'jquery';
 
@@ -35,11 +36,20 @@ export class MathdetailComponent implements OnInit {
   showPiPlot: boolean;
   script: any;
   score: Score;
-  
+  lessonList: any[];
+  reviewPage: boolean;
+  allItems: any[];
+  pagedItems: any[];
+  pager: any={};
 
-  constructor(private mathDetail: MathdetailService, private elementRef: ElementRef) {
+  constructor(private mathDetail: MathdetailService, 
+      private elementRef: ElementRef, private pagerService: PagerService) 
+  {
     this.questionList = [];
     this.questionLines = [];
+    this.pagedItems = [];
+    this.allItems = [];
+    this.lessonList = [];
     this.score = new Score();
     this.score.correct = 0;
     this.score.wrong = 0;
@@ -50,7 +60,7 @@ export class MathdetailComponent implements OnInit {
     // so the panel is set false and first page true
     this.showAnswerPanel = false;
     this.firstPage = true;
-  
+
     this.invokeMathDetail();
   }
 
@@ -58,9 +68,11 @@ export class MathdetailComponent implements OnInit {
   invokeMathDetail() {
     this.mathDetail.getMathDetail(this.childTopic.topicDetailsId, this.studentGradeinChild).subscribe(
       resultArray => {
-        this.problemList = resultArray.problem;
+        this.problemList = resultArray.problemList;
+        this.allItems = resultArray.lessonList;
         this.topic = this.problemList[0].questionHeading;
         this.setNumberOfQuestionsInTest();
+       // this.setPage(1);
       },
       error => {
         // TODO
@@ -93,7 +105,7 @@ export class MathdetailComponent implements OnInit {
 
     this.checkForMultipleQuestions();
   }
-  
+
   loadScript() {
 
     let imagex = document.getElementById("image")
@@ -101,14 +113,14 @@ export class MathdetailComponent implements OnInit {
     if (null != imagex) {
       document.getElementById("image").innerHTML = null
     }
-    
+
     this.script = document.createElement('script');
     this.elementRef.nativeElement.appendChild(this.script);
 
     this.script.type = 'text/javascript';
     this.script.src = './assets/GeoImage.js';
   }
-  
+
 
   checkAnswer() {
     this.showAnswerPanel = true;
@@ -119,21 +131,21 @@ export class MathdetailComponent implements OnInit {
         this.correctAnswer = true;
         this.score.correct++;
       } else {
-        this.score.wrong ++;
+        this.score.wrong++;
         this.correctAnswer = false;
       }
     } // else block for radio button
     else if (this.userInput != null && this.userInputs.length == 0) {
 
       if (parseFloat(this.userInput) === parseFloat(this.answer)) {
-        this.score.correct ++;
+        this.score.correct++;
         this.correctAnswer = true;
       } else {
-        this.score.wrong ++;
+        this.score.wrong++;
         this.correctAnswer = false;
       }
     } // else block for multiple questions
-    else if (this.userInputs.length >0) {
+    else if (this.userInputs.length > 0) {
       this.showAnswerPanel = false;
       this.isMultipleQuestionCorrect();
     }
@@ -143,20 +155,20 @@ export class MathdetailComponent implements OnInit {
     } else {
       this.borderColor = 'wrong';
     }
-    
+
   }
 
 
   onSelectionChange(selectedItem) {
     this.selectedAnswer = selectedItem;
   }
-  
+
   /*
    * if multiple questions then save that in a questionList, otherwise save that to questionlines
    */
-  checkForMultipleQuestions () {
-    for (let i=0; i< this.tempQuestionLines.length; i++) {
-      if (this.tempQuestionLines[i].latexFormat === 'MULTIPLE_QUESTION'){
+  checkForMultipleQuestions() {
+    for (let i = 0; i < this.tempQuestionLines.length; i++) {
+      if (this.tempQuestionLines[i].latexFormat === 'MULTIPLE_QUESTION') {
         let question = this.tempQuestionLines[i].questionLn;
         this.keyValueQuestionList(question);
       } else {
@@ -165,12 +177,12 @@ export class MathdetailComponent implements OnInit {
       }
     }
   }
-  
+
   /*
    * split the question with delimeter 'answer' with first part as question and second part as answer
    * create a new object and push that to questionlist
    */
-  keyValueQuestionList (qst) {
+  keyValueQuestionList(qst) {
     let mp = new MultipleQuestion();
     let input = qst.split('answer');
     let question = input[0]
@@ -179,55 +191,76 @@ export class MathdetailComponent implements OnInit {
     mp.answer = answer;
     this.questionList.push(mp);
   }
-  
+
   /*
    * does the list holds a list of questions?
    */
-  isQuestionList () {
+  isQuestionList() {
     if (this.questionList.length > 0) {
       return true;
     } else {
       return false;
     }
   }
-  
+
   /*
    * check user input for multiple questions
    */
   isMultipleQuestionCorrect() {
 
-    for (let i=0; i< this.questionList.length; i++) {
+    for (let i = 0; i < this.questionList.length; i++) {
       if (parseFloat(this.questionList[i].answer.trim()) == parseFloat(this.userInputs[i])) {
         this.questionList[i].label = 'Correct';
-        this.score.correct ++;
+        this.score.correct++;
         this.questionList[i].lookAndFeel = 'label label-success'
       } else {
-        this.score.wrong ++;
+        this.score.wrong++;
         this.questionList[i].label = 'Wrong';
         this.questionList[i].lookAndFeel = 'label label-danger'
       }
     }
   }
-  
+
   /*
    * sets the number of total questions
    */
   setNumberOfQuestionsInTest() {
     this.score.total = this.problemList.length;
-    
-    for (let i=0; i<this.problemList.length; i++) {
-      
+
+    for (let i = 0; i < this.problemList.length; i++) {
+
       const question = this.problemList[i].questionLines;
       // look for multiple questions in one question. The main question is included in the list. Therefore, we loop the questionlines length-1 times.
-      for (let j =0; j< question.length-1; j++) {
+      for (let j = 0; j < question.length - 1; j++) {
         const qline = question[j].questionLn;
         if (question[j].latexFormat !== null && question[j].latexFormat === 'MULTIPLE_QUESTION') {
           this.score.total++;
         }
       }
     }
+  }
 
+  /*setPageItems() {
+    for (let i = 0; i < this.lessonList.length; i++) {
+      const ls = new Lesson();
+      ls.lessonHeader = this.lessonList[i].lessonHeader;
+      ls.lessonBody = this.lessonList[i].lessonBody;
+      this.pagedItems.push(ls);
+      console.log(ls.lessonBody);
+    }
 
+    this.pager = this.lessonList
+  }*/
+  
+  setPage(page: number) {
+    this.pager = this.pagerService.getPager(this.allItems.length, page);
+    //this.pagedItems = this.allItems.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.pagedItems = this.allItems[this.pager.currentPage-1];
+    console.log();
   }
   
+  startReview() {
+    this.setPage(1);
+    this.reviewPage = true;
+  }
 }

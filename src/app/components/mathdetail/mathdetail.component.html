@@ -7,11 +7,13 @@
 -->
 
 <!-- <div *ngIf="!firstPage" class="col-sm-8"> -->
+<!-- <div [hidden]="firstPage" class="col-sm-8"> -->
 <input type="hidden" name="id_image"  id="id_image"  [(ngModel)]="imageLine" >
-<div [hidden]="firstPage" class="col-sm-8">
+<div *ngIf="!firstPage" class="col-sm-8">
 	<div class="control-group">
     	<span class="label label-info full-width">{{childTopic.topicDetailName}}</span>
 	</div>
+
 	<div class="row">
 		<div class="panel panel-default">
 			<div class="panel-body">
@@ -71,7 +73,7 @@
 
 
 <!-- <div *ngIf="!firstPage" class="col-sm-4"> -->
-<div [hidden]="firstPage" class="col-sm-4">
+<div *ngIf="!firstPage" class="col-sm-4">
 	<div class="panel-group" id="accordion">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -108,5 +110,18 @@
 	{{topic}}
 </div>
 <div *ngIf="firstPage" class="col-sm-4">
-	<button type="button" class="btn btn-primary" (click)="nextButtonOnClick()">Start Practice</button>
+	<button type="button" class="btn btn-primary" (click)="nextButtonOnClick()">Start Practice</button><br>
+	<br>
+	<button type="button" class="btn btn-primary" (click)="startReview()">Start Review</button>
+</div>
+<div *ngIf="reviewPage" class="col-sm-8">
+	<!-- <div *ngFor="let item of pagedItems">{{item.lessonBody}}</div> -->
+	<div> {{pagedItems.lessonBody}}</div>
+
+	<!-- pager -->
+	<ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+		<li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+			<a (click)="setPage(page)">{{page}}</a>
+		</li>
+	</ul>
 </div>

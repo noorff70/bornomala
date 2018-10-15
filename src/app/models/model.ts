@@ -69,3 +69,8 @@ export class Score{
   total: number;
   remaining: number;
 }
+
+export class Lesson {
+  lessonHeader: string;
+  lessonBody: string;
+}
