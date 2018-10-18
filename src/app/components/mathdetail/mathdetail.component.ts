@@ -81,6 +81,8 @@ export class MathdetailComponent implements OnInit {
   }
 
   nextButtonOnClick() {
+    
+    this.reviewPage = false;
     this.questionList = [];
     this.firstPage = false;
     this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
@@ -240,27 +242,15 @@ export class MathdetailComponent implements OnInit {
     }
   }
 
-  /*setPageItems() {
-    for (let i = 0; i < this.lessonList.length; i++) {
-      const ls = new Lesson();
-      ls.lessonHeader = this.lessonList[i].lessonHeader;
-      ls.lessonBody = this.lessonList[i].lessonBody;
-      this.pagedItems.push(ls);
-      console.log(ls.lessonBody);
-    }
-
-    this.pager = this.lessonList
-  }*/
   
   setPage(page: number) {
     this.pager = this.pagerService.getPager(this.allItems.length, page);
-    //this.pagedItems = this.allItems.slice(this.pager.startIndex, this.pager.endIndex + 1);
     this.pagedItems = this.allItems[this.pager.currentPage-1];
-    console.log();
   }
   
   startReview() {
     this.setPage(1);
     this.reviewPage = true;
+    this.firstPage = false;
   }
 }
