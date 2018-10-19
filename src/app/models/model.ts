@@ -73,4 +73,5 @@ export class Score{
 export class Lesson {
   lessonHeader: string;
   lessonBody: string;
+  picturePath:string;
 }

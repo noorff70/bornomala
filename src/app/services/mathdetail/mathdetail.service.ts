@@ -11,7 +11,7 @@ export class MathdetailService {
 
   getMathDetail(topicsID: any, gradeId: any): Observable<any> {
 
-    return this.http.get('http://localhost:8080/lbmp/mathDetail', {
+    return this.http.get('http://localhost:8080/lbmp/mathDetail',  {
       params: {
         TOPICDETAILID: topicsID,
         GRADEID: gradeId
