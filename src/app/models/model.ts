@@ -71,6 +71,10 @@ export class Score{
 }
 
 export class Lesson {
+  lessonBodyList: LessonBody[];
+}
+
+export class LessonBody {
   lessonHeader: string;
   lessonBody: string;
   picturePath:string;

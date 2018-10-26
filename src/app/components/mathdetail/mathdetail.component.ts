@@ -1,4 +1,4 @@
-import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson} from '../../models/model';
+import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody} from '../../models/model';
 import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
 import { PagerService } from "../../services/pagerservice/pager.service";
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
@@ -12,7 +12,7 @@ import * as $ from 'jquery';
 })
 export class MathdetailComponent implements OnInit {
 
-  MathJax: any;
+  //MathJax: any;
 
   @Input() childTopic: TopicDetail;
   @Input() studentGradeinChild: any;
@@ -38,8 +38,8 @@ export class MathdetailComponent implements OnInit {
   score: Score;
   lessonList: any[];
   reviewPage: boolean;
-  allItems: any[];
-  pagedItems: any[];
+  allItems: any //Lesson[];
+  pagedItems: Lesson[];
   pager: any={};
 
   constructor(private mathDetail: MathdetailService, 
@@ -244,8 +244,9 @@ export class MathdetailComponent implements OnInit {
 
   
   setPage(page: number) {
+    
     this.pager = this.pagerService.getPager(this.allItems.length, page);
-    this.pagedItems = this.allItems[this.pager.currentPage-1];
+    this.pagedItems = this.allItems.slice(this.pager.currentPage-1, this.pager.currentPage);
   }
   
   startReview() {
@@ -253,4 +254,16 @@ export class MathdetailComponent implements OnInit {
     this.reviewPage = true;
     this.firstPage = false;
   }
+  
+    ifEmptyPicturePath(obj) {
+      
+      const val = (obj && (Object.keys(obj).length) === 0);
+      
+      if (val === false) {
+        return false
+      }
+        return true;
+    }
+
+
 }

@@ -109,19 +109,29 @@
 
 
 
-<div *ngIf="reviewPage" class="col-sm-12">
-	
-	<div class="col-xs-6">
-		<img class="img-responsive"  src={{pagedItems.picturePath}}>
-	</div>
-	<div class="col-xs-6"> {{pagedItems.lessonBody}}</div>
-
+<div *ngIf="reviewPage" >
+	<div class="control-group">
+    	<span class="label label-info full-width">Chapter Review</span>
+	</div><br>
+	<div *ngFor="let lessons of pagedItems[0].lessonBodyList; let i = index">
+		<div *ngIf="!ifEmptyPicturePath(lessons.picturePath)"  class="col-xs-12">
+			<div class="col-xs-6">
+				<img class="img-responsive"  src={{lessons.picturePath}}>
+			</div>
+			<div class="col-xs-6">{{lessons.lessonBody}}</div>
+		</div>
+		<div *ngIf="ifEmptyPicturePath(lessons.picturePath)">
+			<div class="col-xs-12"><app-mathjax [inputMathJax]="lessons.lessonBody"></app-mathjax></div>
+		</div>
+	</div>	
 	<!-- pager -->
-	<ul *ngIf="pager.pages && pager.pages.length" class="pagination">
-		<li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
-			<a (click)="setPage(page)">{{page}}</a>
-		</li>
-	</ul>
+	<div>
+		<ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+			<li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+				<a (click)="setPage(page)">{{page}}</a>
+			</li>
+		</ul>
+	</div>
 	<div><button type="button" class="btn btn-primary btn-block" (click)="nextButtonOnClick()">Start  Practice</button></div>
 </div>
 
