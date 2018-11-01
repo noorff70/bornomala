@@ -51,6 +51,18 @@
 						<input type="text" name = "userInput" class="form-control" id="userInput" [(ngModel)]="userInput">
 					</div>
 				</div>
+				<div id = "multiples" *ngIf="questionType == 'MULTIPLES'">
+					<div *ngFor="let quLine of questionLines; let i = index"><br>
+						<span><label><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></label></span><br>
+					</div>
+					<div *ngIf= "isQuestionList()">
+						<div class = "row" *ngFor="let qst of questionList; let i = index">
+							<div class="col-sm-6"><span><label><app-mathjax [inputMathJax]="questionList[i].question"></app-mathjax></label></span></div>
+							<div class="col-sm-4"><input type="text" name = "userInputs" class="form-control" id="userInputs" [(ngModel)]="userInputs[i]"></div>
+							<div class="col-sm-2" ><span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -102,6 +102,7 @@ export class MathdetailComponent implements OnInit {
 
       this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
     } else {
+      this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
       this.showPiPlot = false;
     }
 
