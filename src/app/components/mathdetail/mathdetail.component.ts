@@ -211,11 +211,20 @@ export class MathdetailComponent implements OnInit {
    */
   isMultipleQuestionCorrect() {
 
+    
+    
     for (let i = 0; i < this.questionList.length; i++) {
-      if (parseFloat(this.questionList[i].answer.trim()) == parseFloat(this.userInputs[i])) {
-        this.questionList[i].label = 'Correct';
-        this.score.correct++;
-        this.questionList[i].lookAndFeel = 'label label-success'
+
+      if (isNaN(parseFloat(this.questionList[i].answer.trim()))) {
+        if (this.questionList[i].answer.trim() == this.userInputs[i]) {
+          this.questionList[i].label = 'Correct';
+          this.score.correct++;
+          this.questionList[i].lookAndFeel = 'label label-success'
+        }
+      }else if (parseFloat(this.questionList[i].answer.trim()) == parseFloat(this.userInputs[i])){
+          this.questionList[i].label = 'Correct';
+          this.score.correct++;
+          this.questionList[i].lookAndFeel = 'label label-success'
       } else {
         this.score.wrong++;
         this.questionList[i].label = 'Wrong';
