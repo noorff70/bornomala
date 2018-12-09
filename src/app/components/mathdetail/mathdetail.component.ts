@@ -138,19 +138,27 @@ export class MathdetailComponent implements OnInit {
         this.correctAnswer = false;
       }
     } // else block for radio button
-    else if (this.userInput != null && this.userInputs.length == 0) {
-
-      if (parseFloat(this.userInput) === parseFloat(this.answer)) {
-        this.score.correct++;
-        this.correctAnswer = true;
+    else if (this.userInputs.length == 0 && this.userInput != null) {
+      
+      let answer = this.answer.trim().replace(/\s+/g, '');
+      let userAnswer = this.userInput.trim().replace(/\s+/g, '');
+      
+      if (answer === userAnswer) {
+          this.score.correct++;
+          this.correctAnswer = true;
       } else {
-        this.score.wrong++;
-        this.correctAnswer = false;
+          this.score.wrong++;
+          this.correctAnswer = false;
       }
+
     } // else block for multiple questions
     else if (this.userInputs.length > 0) {
       this.showAnswerPanel = false;
       this.isMultipleQuestionCorrect();
+    }
+    else {
+      this.score.wrong++;
+      this.correctAnswer = false;
     }
 
     if (this.correctAnswer) {
@@ -214,18 +222,23 @@ export class MathdetailComponent implements OnInit {
     
     
     for (let i = 0; i < this.questionList.length; i++) {
+      
+      let answer =  this.questionList[i].answer.trim().replace(/\s+/g,'');
 
-      if (isNaN(parseFloat(this.questionList[i].answer.trim()))) {
-        if (this.questionList[i].answer.trim() == this.userInputs[i]) {
+      if ( this.userInputs[i] !== undefined) {
+         let userAnswer = this.userInputs[i].trim().replace(/\s+/g,'');
+        
+        if (answer === userAnswer) {
           this.questionList[i].label = 'Correct';
           this.score.correct++;
           this.questionList[i].lookAndFeel = 'label label-success'
+        } else {
+          this.score.wrong++;
+          this.questionList[i].label = 'Wrong';
+          this.questionList[i].lookAndFeel = 'label label-danger'
         }
-      }else if (parseFloat(this.questionList[i].answer.trim()) == parseFloat(this.userInputs[i])){
-          this.questionList[i].label = 'Correct';
-          this.score.correct++;
-          this.questionList[i].lookAndFeel = 'label label-success'
-      } else {
+      }
+      else {
         this.score.wrong++;
         this.questionList[i].label = 'Wrong';
         this.questionList[i].lookAndFeel = 'label label-danger'
