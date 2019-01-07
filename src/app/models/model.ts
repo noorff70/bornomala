@@ -28,6 +28,7 @@ export class TopicDetail {
 
 export class Answer {
   answer: string;
+  displayableAnswer:string;
   type: string;
   answerOption: string;
   noOfCorrectAnswer: number;

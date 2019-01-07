@@ -69,7 +69,7 @@
 	<div *ngIf="showAnswerPanel" class="row">
 		<div class="panel panel-default {{borderColor}}">
 			<div class="panel-body">
-				<div class="col-sm-6" ><span> <app-mathjax [inputMathJax]="answer"></app-mathjax></span></div>
+				<div class="col-sm-6" ><span> <app-mathjax [inputMathJax]="displayableAnswer"></app-mathjax></span></div>
 				<div *ngIf="correctAnswer" class="glyphicon glyphicon-ok col-sm-6" aria-hidden="true" style="color:green"></div>
 				<div *ngIf="!correctAnswer" class="glyphicon glyphicon-remove col-sm-6" aria-hidden="true" style="color:red"></div>
 			</div>

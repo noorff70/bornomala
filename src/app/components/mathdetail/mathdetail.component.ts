@@ -24,6 +24,7 @@ export class MathdetailComponent implements OnInit {
   answerLines: any[];
   selectedAnswer: string;
   answer: string;
+  displayableAnswer:string;
   showAnswerPanel: boolean;
   correctAnswer: boolean; // correct/wrong answer
   firstPage: boolean; // blank page with description of test and a next button.
@@ -50,6 +51,7 @@ export class MathdetailComponent implements OnInit {
     this.pagedItems = [];
     this.allItems = [];
     this.lessonList = [];
+    this.answerLines=[];
     this.score = new Score();
     this.score.correct = 0;
     this.score.wrong = 0;
@@ -87,6 +89,10 @@ export class MathdetailComponent implements OnInit {
     this.firstPage = false;
     this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
     this.answer = this.problemList[this.currentIndexToShow].answer.answer;
+    this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
+    if(null === this.displayableAnswer){
+      this.displayableAnswer = this.answer;
+    }
     this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
     this.questionType = this.problemList[this.currentIndexToShow].questionType;
     this.currentIndexToShow++;
@@ -128,7 +134,7 @@ export class MathdetailComponent implements OnInit {
   checkAnswer() {
     this.showAnswerPanel = true;
 
-    // if block for text box
+    // Radio Button
     if (this.selectedAnswer != null) {
       if (this.selectedAnswer === this.answer) {
         this.correctAnswer = true;
@@ -137,19 +143,42 @@ export class MathdetailComponent implements OnInit {
         this.score.wrong++;
         this.correctAnswer = false;
       }
-    } // else block for radio button
+    } // Single Text Box
     else if (this.userInputs.length == 0 && this.userInput != null) {
-      
-      let answer = this.answer.trim().replace(/\s+/g, '');
-      let userAnswer = this.userInput.trim().replace(/\s+/g, '');
-      
-      if (answer === userAnswer) {
+
+      let userAnswer = this.removeLeadingZeros(this.userInput.trim().replace(/\s+/g, ''));
+      //it has a single answer
+      if (null != this.answer) {
+        let answer = this.removeLeadingZeros(this.answer.trim().replace(/\s+/g, ''));
+ 
+        if (answer === userAnswer) {
           this.score.correct++;
           this.correctAnswer = true;
-      } else {
+        } else {
           this.score.wrong++;
           this.correctAnswer = false;
+        }
+      } else if (null != this.answerLines) {
+        let correctAnswer = false;
+        
+        for(let m=0; m< this.answerLines.length; m++){
+          let answer = this.answerLines[m].answerLn;
+          answer = this.removeLeadingZeros(answer.replace(/\s+/g, ''));
+          //answer = answer.trim().replace(/\s+/g, '');
+          if (userAnswer === answer){
+            correctAnswer = true;
+          }
+        }
+        if(correctAnswer){
+          this.score.correct++;
+          this.correctAnswer = true;
+        } else {
+            this.score.wrong++;
+            this.correctAnswer = false;
+        }
       }
+
+
 
     } // else block for multiple questions
     else if (this.userInputs.length > 0) {
@@ -218,17 +247,15 @@ export class MathdetailComponent implements OnInit {
    * check user input for multiple questions
    */
   isMultipleQuestionCorrect() {
-
-    
     
     for (let i = 0; i < this.questionList.length; i++) {
       
-      let answer =  this.questionList[i].answer.trim().replace(/\s+/g,'');
+      let answer =  this.removeLeadingZeros(this.questionList[i].answer.trim().replace(/\s+/g,''));
 
       if ( this.userInputs[i] !== undefined) {
-         let userAnswer = this.userInputs[i].trim().replace(/\s+/g,'');
+         let userAnswer = this.removeLeadingZeros(this.userInputs[i].trim().replace(/\s+/g,''));
         
-        if (answer === userAnswer) {
+      if (answer === userAnswer) {
           this.questionList[i].label = 'Correct';
           this.score.correct++;
           this.questionList[i].lookAndFeel = 'label label-success'
@@ -287,6 +314,16 @@ export class MathdetailComponent implements OnInit {
       }
         return true;
     }
+  
+  removeLeadingZeros(str){
+    //if there is no decimal or contains a character
+    if (str.indexOf(".") === -1 || isNaN(str)===true) {
+      return str;
+    }
+    //copied from stack over flow that removes leading and trailing 0s
+    return eval(str).toPrecision(10).replace(/(?:\.0+|(\.\d+?)0+)$/, "$1")
+    // return str.replace(/^0+/, '');
+  }
 
 
 }
