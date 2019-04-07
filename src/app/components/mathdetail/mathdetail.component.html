@@ -151,7 +151,7 @@
 <div *ngIf="firstPage" class="col-sm-8">
 	{{topic}}
 </div>
-<div *ngIf="firstPage" class="col-sm-4">
+<div *ngIf="firstPage && problemList != null" class="col-sm-4">
 	<button type="button" class="btn btn-primary btn-block" (click)="nextButtonOnClick()">Start  Practice</button><br>
 	<br>
 	<button type="button" class="btn btn-primary btn-block" (click)="startReview()">Chapter Review</button>

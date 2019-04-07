@@ -151,7 +151,7 @@ export class MathdetailComponent implements OnInit {
       if (null != this.answer) {
         let answer = this.removeLeadingZeros(this.answer.trim().replace(/\s+/g, ''));
  
-        if (answer === userAnswer) {
+        if (answer.toUpperCase() === userAnswer.toUpperCase()) {
           this.score.correct++;
           this.correctAnswer = true;
         } else {
@@ -165,7 +165,7 @@ export class MathdetailComponent implements OnInit {
           let answer = this.answerLines[m].answerLn;
           answer = this.removeLeadingZeros(answer.replace(/\s+/g, ''));
           //answer = answer.trim().replace(/\s+/g, '');
-          if (userAnswer === answer){
+          if (userAnswer.toUpperCase() === answer.toUpperCase()){
             correctAnswer = true;
           }
         }
@@ -255,7 +255,7 @@ export class MathdetailComponent implements OnInit {
       if ( this.userInputs[i] !== undefined) {
          let userAnswer = this.removeLeadingZeros(this.userInputs[i].trim().replace(/\s+/g,''));
         
-      if (answer === userAnswer) {
+      if (answer.toUpperCase() === userAnswer.toUpperCase()) {
           this.questionList[i].label = 'Correct';
           this.score.correct++;
           this.questionList[i].lookAndFeel = 'label label-success'
