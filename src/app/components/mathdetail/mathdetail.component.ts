@@ -28,6 +28,7 @@ export class MathdetailComponent implements OnInit {
   showAnswerPanel: boolean;
   correctAnswer: boolean; // correct/wrong answer
   firstPage: boolean; // blank page with description of test and a next button.
+  questionAnswered: boolean;
   topic: string;
   questionType: string;
   userInput: string;
@@ -55,6 +56,7 @@ export class MathdetailComponent implements OnInit {
     this.score = new Score();
     this.score.correct = 0;
     this.score.wrong = 0;
+    this.questionAnswered = false;
   }
 
   ngOnInit() {
@@ -62,7 +64,7 @@ export class MathdetailComponent implements OnInit {
     // so the panel is set false and first page true
     this.showAnswerPanel = false;
     this.firstPage = true;
-
+    this.questionAnswered = false;
     this.invokeMathDetail();
   }
 
@@ -83,7 +85,7 @@ export class MathdetailComponent implements OnInit {
   }
 
   nextButtonOnClick() {
-    
+    this.questionAnswered = false
     this.reviewPage = false;
     this.questionList = [];
     this.firstPage = false;
@@ -132,70 +134,73 @@ export class MathdetailComponent implements OnInit {
 
 
   checkAnswer() {
-    this.showAnswerPanel = true;
+    if (this.questionAnswered != true) {
 
-    // Radio Button
-    if (this.selectedAnswer != null) {
-      if (this.selectedAnswer === this.answer) {
-        this.correctAnswer = true;
-        this.score.correct++;
-      } else {
-        this.score.wrong++;
-        this.correctAnswer = false;
-      }
-    } // Single Text Box
-    else if (this.userInputs.length == 0 && this.userInput != null) {
+      this.showAnswerPanel = true;
 
-      let userAnswer = this.removeLeadingZeros(this.userInput.trim().replace(/\s+/g, ''));
-      //it has a single answer
-      if (null != this.answer) {
-        let answer = this.removeLeadingZeros(this.answer.trim().replace(/\s+/g, ''));
- 
-        if (answer.toUpperCase() === userAnswer.toUpperCase()) {
-          this.score.correct++;
+      // Radio Button
+      if (this.selectedAnswer != null) {
+        if (this.selectedAnswer === this.answer) {
           this.correctAnswer = true;
+          this.score.correct++;
         } else {
           this.score.wrong++;
           this.correctAnswer = false;
         }
-      } else if (null != this.answerLines) {
-        let correctAnswer = false;
-        
-        for(let m=0; m< this.answerLines.length; m++){
-          let answer = this.answerLines[m].answerLn;
-          answer = this.removeLeadingZeros(answer.replace(/\s+/g, ''));
-          //answer = answer.trim().replace(/\s+/g, '');
-          if (userAnswer.toUpperCase() === answer.toUpperCase()){
-            correctAnswer = true;
-          }
-        }
-        if(correctAnswer){
-          this.score.correct++;
-          this.correctAnswer = true;
-        } else {
+      } // Single Text Box
+      else if (this.userInputs.length == 0 && this.userInput != null) {
+
+        let userAnswer = this.removeLeadingZeros(this.userInput.trim().replace(/\s+/g, ''));
+        //it has a single answer
+        if (null != this.answer) {
+          let answer = this.removeLeadingZeros(this.answer.trim().replace(/\s+/g, ''));
+
+          if (answer.toUpperCase() === userAnswer.toUpperCase()) {
+            this.score.correct++;
+            this.correctAnswer = true;
+          } else {
             this.score.wrong++;
             this.correctAnswer = false;
+          }
+        } else if (null != this.answerLines) {
+          let correctAnswer = false;
+
+          for (let m = 0; m < this.answerLines.length; m++) {
+            let answer = this.answerLines[m].answerLn;
+            answer = this.removeLeadingZeros(answer.replace(/\s+/g, ''));
+            //answer = answer.trim().replace(/\s+/g, '');
+            if (userAnswer.toUpperCase() === answer.toUpperCase()) {
+              correctAnswer = true;
+            }
+          }
+          if (correctAnswer) {
+            this.score.correct++;
+            this.correctAnswer = true;
+          } else {
+            this.score.wrong++;
+            this.correctAnswer = false;
+          }
         }
+
+
+
+      } // else block for multiple questions
+      else if (this.userInputs.length > 0) {
+        this.showAnswerPanel = false;
+        this.isMultipleQuestionCorrect();
+      }
+      else {
+        this.score.wrong++;
+        this.correctAnswer = false;
       }
 
-
-
-    } // else block for multiple questions
-    else if (this.userInputs.length > 0) {
-      this.showAnswerPanel = false;
-      this.isMultipleQuestionCorrect();
+      if (this.correctAnswer) {
+        this.borderColor = 'correct';
+      } else {
+        this.borderColor = 'wrong';
+      }
+      this.questionAnswered = true;
     }
-    else {
-      this.score.wrong++;
-      this.correctAnswer = false;
-    }
-
-    if (this.correctAnswer) {
-      this.borderColor = 'correct';
-    } else {
-      this.borderColor = 'wrong';
-    }
-
   }
 
 
