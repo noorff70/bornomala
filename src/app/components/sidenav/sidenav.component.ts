@@ -1,5 +1,6 @@
 import {Common} from '../../common/Common';
 import {Grade, GradeSubject, Topic, TopicDetail} from '../../models/model';
+import { CommunicationService } from "../../services/common/communication.service";
 import {MenuService} from '../../services/menuservice/menu.service';
 import {TopicService} from '../../services/topicservice/topic.service';
 import {ParentComponent} from '../parent/parent.component';
@@ -23,12 +24,13 @@ export class SidenavComponent implements OnInit {
   topicDetailList: TopicDetail[];
   topics: any[];
   @Output() displayBody = new EventEmitter();
-  @Output() changeScreen = new EventEmitter<string>();
+  //@Output() changeScreen = new EventEmitter<string>();
   @Output() studentGrade = new EventEmitter<any>();
 
   constructor(
     private menuService: MenuService,
     private topicService: TopicService,
+    private comService: CommunicationService
   ) {
   }
 
@@ -88,7 +90,8 @@ export class SidenavComponent implements OnInit {
       this.topicList.push(topic);
     }
     // emit this to parent-component
-    this.changeScreen.emit('<app-body></app-body>');
+    //this.changeScreen.emit('<app-body></app-body>');
+    this.comService.changeCommScreen('<app-body></app-body>');
     this.displayBody.emit(this.topicList);
   }
 }

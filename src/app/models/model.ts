@@ -80,3 +80,19 @@ export class LessonBody {
   lessonBody: string;
   picturePath:string;
 }
+
+export class User {
+  username: string;
+  password: string;
+  userFirstName: string;
+  userLastName: string;
+  userAddress: string;
+  userCity: string;
+  userPostalCode: string;
+  userSchool: string;  
+}
+
+export class MessageReturned {
+  success: boolean;
+  msg: string;
+}

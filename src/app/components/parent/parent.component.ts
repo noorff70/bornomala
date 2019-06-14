@@ -1,4 +1,5 @@
 import {Topic, TopicDetail} from '../../models/model';
+import { CommunicationService } from "../../services/common/communication.service";
 import {Component, OnInit, Input} from '@angular/core';
 
 @Component({
@@ -12,12 +13,16 @@ export class ParentComponent implements OnInit {
   currentscreen: string;
   parentTopic: TopicDetail;
   studentGrade: any;
+  screen: any;
 
-  constructor() {
+  constructor(private commService: CommunicationService) {
   }
 
   ngOnInit() {
-    this.currentscreen = '<app-body></app-body>';
+   // this.currentscreen = '<app-body></app-body>';
+     this.commService.changeScreenService.subscribe(screen => {
+     this.currentscreen = screen;
+    });
   }
 
   // user select main menu and list of sub menu will be displayed in body

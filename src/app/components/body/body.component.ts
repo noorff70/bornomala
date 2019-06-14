@@ -1,8 +1,8 @@
 import {Common} from '../../common/Common';
 import {GradeSubject, Topic, TopicDetail} from '../../models/model';
+import { CommunicationService } from "../../services/common/communication.service";
 import {ParentComponent} from '../parent/parent.component';
 import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
-import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -13,13 +13,13 @@ import {Subscription} from 'rxjs';
 export class BodyComponent implements OnInit {
 
   gradeSubject: any;
-  private subscriber: Subscription;
   @Input() childTopicList: Topic[];
-  @Output() changeScreen = new EventEmitter<string>();
+  //@Output() changeScreen = new EventEmitter<string>();
   @Output() topicDetail = new EventEmitter<TopicDetail>(); // child to Parent
   tDetail: TopicDetail;
 
-  constructor() {
+  constructor(
+    private comService: CommunicationService) {
   }
 
   ngOnInit() {
@@ -30,8 +30,10 @@ export class BodyComponent implements OnInit {
     this.tDetail = new TopicDetail();
     this.tDetail.topicDetailsId = id;
     this.tDetail.topicDetailName = name;
+    
+    this.comService.changeCommScreen('<app-mathdetail></app-mathdetail>');
 
-    this.changeScreen.emit('<app-mathdetail></app-mathdetail>');
+    //this.changeScreen.emit('<app-mathdetail></app-mathdetail>');
 
     this.topicDetail.emit(this.tDetail);
   }

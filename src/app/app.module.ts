@@ -15,6 +15,7 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { MenuService } from './services/menuservice/menu.service';
 import { MathdetailComponent } from './components/mathdetail/mathdetail.component';
 import { MathjaxComponent } from './common/mathjax/mathjax.component';
+import { LoginComponent } from "./components/login/login.component";
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -26,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     MathdetailComponent,
-    MathjaxComponent
+    MathjaxComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

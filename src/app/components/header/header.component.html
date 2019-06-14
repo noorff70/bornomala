@@ -6,8 +6,14 @@
 	<div class="col-xs-9">
 		<img class="img-responsive"  src="./assets/images/header.png">
 	</div>
-	<div class="col-xs-1">
-		Login
+	<div class="col-xs-1" *ngIf="null === userName">
+		<a href="javascript:void(0)" (click)="openLoginPage()"> Login </a>
+	</div>
+	<div class="col-xs-1" *ngIf="null !== userName">
+		<br> {{userName}} 
+	</div>
+	<div class="col-xs-1" *ngIf="null !== userName">
+		<a href="javascript:void(0)" (click)="signOut()"> Sign Out</a>
 	</div>
 
 
