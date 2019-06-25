@@ -30,9 +30,8 @@ export class SidenavComponent implements OnInit {
   constructor(
     private menuService: MenuService,
     private topicService: TopicService,
-    private comService: CommunicationService
-  ) {
-  }
+    private comService: CommunicationService,
+  ) {  }
 
   ngOnInit() {
 
@@ -44,6 +43,7 @@ export class SidenavComponent implements OnInit {
     this.menuService.getLeftMenu().subscribe(
       resultArray => {
         this.gradeList = resultArray;
+        this.saveGradetoLocalStorage();
       },
       error => {
         console.log('Error :: ' + error)
@@ -93,5 +93,9 @@ export class SidenavComponent implements OnInit {
     //this.changeScreen.emit('<app-body></app-body>');
     this.comService.changeCommScreen('<app-body></app-body>');
     this.displayBody.emit(this.topicList);
+  }
+  
+  saveGradetoLocalStorage(){
+    localStorage.setItem("gradeList", JSON.stringify(this.gradeList));
   }
 }

@@ -1,8 +1,9 @@
-import { User, MessageReturned } from "../../models/model";
+import { User, MessageReturned, Grade} from "../../models/model";
 import { CommunicationService } from "../../services/common/communication.service";
 import { UsernameService } from "../../services/common/username.service";
 import { LoginService } from "../../services/login/login.service";
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -22,12 +23,17 @@ export class LoginComponent implements OnInit {
   wantToRegister: boolean= false;
   msgRtn: MessageReturned;
   msg: string;
+  userType:string;
+  tutorGradeList: Grade[];
+  userPostalCode: string;
+ 
 
   constructor(private loginService: LoginService,
     private userService: UsernameService,
     private comService: CommunicationService) 
   {
-      console.log();
+    this.tutorGradeList=[]; 
+    this.setlectTutorGrades();
    }
 
   ngOnInit() {
@@ -38,6 +44,7 @@ export class LoginComponent implements OnInit {
     this.comService.changeLoginParameter.subscribe(status=>{
       this.wantToRegister= status;
     });
+    
   }
   
   //user logs in
@@ -65,42 +72,49 @@ export class LoginComponent implements OnInit {
     )
     
   }
-  
-  
+   
   //saves/ registers new users
   userRegister(){
+    
+    this.validateRegistrationInput();
     
     this.user = new User();
     this.user.username = this.userNameRegister; //get from ui
     this.user.password = this.userPasswordRegister; // get value from ui
+    this.user.userPostalCode = this.userPostalCode;
+    this.user.gradeTutor = this.tutorGradeList;
+    this.user.userRole = this.userType;
+
+    
 
     if (this.userPasswordRegister === this.userPasswordRegister1) {
-      
-      //this.passwordMismatch = null;
-      this.msg = null;
-      //invoke rest service
-      this.loginService.registerUser(this.user).subscribe(
-        register => {
-          this.msgRtn = register;
-          this.setMessageReturned ();
-          
-          //if user found save to localstorage
-          if (this.isUserRegistered === true) {
-            this.saveToLocalStorage();
-          } 
+
+        //this.passwordMismatch = null;
+        this.msg = null;
+        //invoke rest service
+        this.loginService.registerUser(this.user).subscribe(
+          register => {
+            this.msgRtn = register;
+            this.setMessageReturned();
+
+            //if user found save to localstorage
+            if (this.isUserRegistered === true) {
+              this.saveToLocalStorage();
+            }
 
 
-        },
-        error => {
-          // TODO
-        }
-      )
+          },
+          error => {
+            // TODO
+          }
+        )
+
     } else {
       //this.passwordMismatch = "Password mismatces. Please reenter your password.";
       this.msg = "Password mismatches. Please reenter your password.";
     }
 
-    
+
   }
   
   //save to local storage
@@ -128,5 +142,26 @@ export class LoginComponent implements OnInit {
     this.isUserRegistered = this.msgRtn.success;
     this.msg = this.msgRtn.msg;
   }
+  
+  validateRegistrationInput() {
+    if (this.userNameRegister === undefined) {
+      this.msg= "Mandatory Input Data Missing";
+      return;
+    }
+  }
+  
+  setlectTutorGrades() {
+    this.tutorGradeList = JSON.parse(localStorage.getItem("gradeList"));
+  }
+  
+  onToggle(id){
+    for (let i=0; i < this.tutorGradeList.length; i++) {
+      if (this.tutorGradeList[i].gradeId === id){
+        let check = this.tutorGradeList[i].selected;
+        this.tutorGradeList[i].selected = !check;
+      }
 
+    }
+  }
+  
 }

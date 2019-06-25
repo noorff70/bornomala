@@ -1,6 +1,7 @@
 export class Grade {
   gradeName: string;
   gradeId: number;
+  selected: boolean = false;
   subjects: Subject[];
 }
 
@@ -89,7 +90,9 @@ export class User {
   userAddress: string;
   userCity: string;
   userPostalCode: string;
-  userSchool: string;  
+  userSchool: string;
+  gradeTutor:Grade[];
+  userRole:string;   
 }
 
 export class MessageReturned {
