@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   userType:string;
   tutorGradeList: Grade[];
   userPostalCode: string;
- 
+  update:boolean = false;
 
   constructor(private loginService: LoginService,
     private userService: UsernameService,
@@ -186,6 +186,11 @@ export class LoginComponent implements OnInit {
       }
 
     }
+  }
+  
+  updateUser(){
+    this.wantToRegister= undefined;
+    this.update = true;
   }
   
 }

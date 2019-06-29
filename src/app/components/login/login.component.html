@@ -2,8 +2,13 @@
 <div class="row">
 	<div class="col-sm-6" *ngIf="wantToRegister === false">
 
-		<div  style="color:blue; text-align:left; font-size:120%;">
-			<label for="colFormLabelSm" class="col-sm-6">Login:</label>
+		<div  class="row" >
+			<div class= "col-sm-6" style="text-align:left; font-size:120%;"> 
+				<label for="colFormLabelSm">Login:</label>
+			</div>
+			<div class= "col-sm-6" style="color:blue; text-align:right; font-size:120%;"> 
+				<a href="javascript:void(0)" (click)="updateUser()"> Update Account</a>
+			</div>
 		</div>
 		
 		<div class="row" style="text-align:left; font-size:90%;">
@@ -74,6 +79,58 @@
 		
 		<div class="row">
 			<button type="button" class="btn btn-primary btn-block" (click)=" userRegister()">Register</button>
+		</div>
+
+	</div>
+	
+	<div class="col-sm-6" *ngIf="update === true">
+		<label style="display: block;">Update Account</label>
+		
+
+        <div class="col">
+          		<input type="text" id="id_UpdateFirstName" name="update_firstName" class="form-control" placeholder="First name">
+        </div>
+        <div class="col">
+          		<input type="text" id="id_UpdateLastName" name="update_lastName" class="form-control" placeholder="Last name">
+        </div>
+
+      	<!-- E-mail -->
+		<input type="email" id="id_UpdateEmail" name="update_email" class="form-control sm-4" placeholder="E-mail">
+		
+		<div style="text-align:left">
+			<label>Select User Type :</label><br>
+      		<select  [(ngModel)]="update_userType">
+        		<option>Student</option>
+        		<option>Tutor</option>
+      		</select>
+   		</div>
+      
+		<div class="col form-check-inline" style="text-align:left">
+            <label clss= "float-left" for="options">Select Grade :</label>
+            <label class="checkbox-inline" *ngFor="let grade of tutorGradeList">
+               	<input type="checkbox" [(ngModel)]="grade.checked" (change)="onToggle(grade.gradeId)">
+               		{{grade.gradeId}} 
+            </label>
+        </div>
+        
+		<div class="col">
+			<input type="text" class="form-control" id="id_userNameUpdate" name="userNameUpdate" [(ngModel)]="userNameUpdate" placeholder="User Name">
+		</div>
+	
+		<div class="col">
+			<input type="password" class="form-control" id="id_password2Update" name="userPasswordUpdate" [(ngModel)]="userPasswordUpdate" placeholder="Password">
+		</div>
+
+		<div class="col">
+			<input type="password" class="form-control" id="id_password3" name="userPasswordRegister1" [(ngModel)]="userPasswordUpdate1" placeholder="Retype Password">
+		</div>
+
+		<div class="col">
+			<input type="text" class="form-control form-control-sm" id="id_usePostal" name="userPostal" [(ngModel)]="userPostalCodeUpdate" placeholder="Postal Code">
+		</div>
+		
+		<div class="row">
+			<button type="button" class="btn btn-primary btn-block" (click)=" userUpdateBtn()">Update</button>
 		</div>
 
 	</div>
