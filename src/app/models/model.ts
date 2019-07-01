@@ -95,6 +95,20 @@ export class User {
   userRole:string;   
 }
 
+export class LoggedUser {
+  username: string;
+  password: string;
+  userFirstName: string;
+  userLastName: string;
+  userAddress: string;
+  userCity: string;
+  userPostalCode: string;
+  userSchool: string;
+  gradeTutor:Grade[];
+  userRole:string;   
+}
+
+
 export class MessageReturned {
   success: boolean;
   msg: string;

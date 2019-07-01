@@ -1,4 +1,4 @@
-import { User, MessageReturned, Grade} from "../../models/model";
+import { User, MessageReturned, Grade, LoggedUser} from "../../models/model";
 import { CommunicationService } from "../../services/common/communication.service";
 import { UsernameService } from "../../services/common/username.service";
 import { LoginService } from "../../services/login/login.service";
@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   
   registerForm: FormGroup;
   user: User;
+  loggedUser: LoggedUser;
   isUserRegistered: boolean = false;
   userName: string;
   userPassword: string;
@@ -60,19 +61,22 @@ export class LoginComponent implements OnInit {
   //user logs in
   userLogin() {
    
-    this.msg = [];   
+    this.msg = [];  
+    this.msgRtn = new MessageReturned(); 
     this.user = new User();
     this.user.username = this.userName; //get from ui
     this.user.password = this.userPassword; // get value from ui
 
     //invoke rest service
     this.loginService.login(this.user).subscribe(
-      checkUser => {
-        this.msgRtn = checkUser;
-        this.setMessageReturned ();
+      loggedUser => {
+        this.loggedUser = loggedUser;
 
         //if user found save to localstorage
-        if (this.isUserRegistered  === true){
+        if (null !== this.loggedUser){
+          this.msgRtn.msg= "Successfully Logged in";
+          this.setMessageReturned ();
+          this.isUserRegistered = true;
           this.saveToLocalStorage();
         }
 
@@ -149,7 +153,7 @@ export class LoginComponent implements OnInit {
   //set return value from RestfulAPI
   setMessageReturned (){
     this.msg = [];
-    this.isUserRegistered = this.msgRtn.success;
+    this.isUserRegistered = true;
     this.msg.push(this.msgRtn.msg);
   }
   
