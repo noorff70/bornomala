@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
     this.user = new User();
     this.user.username = this.userNameRegister; //get from ui
     this.user.password = this.userPasswordRegister; // get value from ui
-    this.user.userPostalCode = this.userPostalCode;
+    this.user.postalCode = this.userPostalCode;
     this.user.gradeTutor = this.tutorGradeList;
     this.user.userRole = this.userType;
    
@@ -169,7 +169,7 @@ export class LoginComponent implements OnInit {
     if (this.user.password === undefined) {
       this.msg.push("User Password Missing") ;
     }
-    if (this.user.userPostalCode === undefined || this.user.userPostalCode.length === 0) {
+    if (this.user.postalCode === undefined || this.user.postalCode.length === 0) {
       this.msg.push("User Postal Code Missing") ;
     }
     if (null === this.user.gradeTutor){
@@ -222,7 +222,7 @@ export class LoginComponent implements OnInit {
     this.user = new User();
     this.user.password= this.userPasswordUpdate;
     this.user.username= this.userNameUpdate;
-    this.user.userPostalCode= this.userPostalCodeUpdate;
+    this.user.postalCode= this.userPostalCodeUpdate;
     this.user.userRole= this.update_userType;
     this.user.gradeTutor=this.updateGradeList;
     

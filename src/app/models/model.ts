@@ -89,7 +89,7 @@ export class User {
   userLastName: string;
   userAddress: string;
   userCity: string;
-  userPostalCode: string;
+  postalCode: string;
   userSchool: string;
   gradeTutor:Grade[];
   userRole:string;   
@@ -102,7 +102,7 @@ export class LoggedUser {
   userLastName: string;
   userAddress: string;
   userCity: string;
-  userPostalCode: string;
+  postalCode: string;
   userSchool: string;
   gradeTutor:Grade[];
   userRole:string;   
