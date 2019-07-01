@@ -33,6 +33,18 @@ export class LoginService {
 
   }
   
+    updateUser (user): Observable<any> {
+
+      return this.http.post('http://localhost:8080/lbmp/updateUser' , user
+
+    )
+      .map((res: Response) => {
+        return res.json();
+      })
+      .catch(this.handleError);
+
+  }
+  
   
     handleError(error: Response) {
     return Observable.throw(error.json().error || 'Server error');

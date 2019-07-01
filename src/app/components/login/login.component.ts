@@ -27,7 +27,13 @@ export class LoginComponent implements OnInit {
   userType:string;
   tutorGradeList: Grade[];
   userPostalCode: string;
+  
   update:boolean = false;
+  userPasswordUpdate: string;
+  userNameUpdate:string;
+  updateGradeList: Grade[];
+  userPostalCodeUpdate:string;
+  update_userType:string;
 
   constructor(private loginService: LoginService,
     private userService: UsernameService,
@@ -38,11 +44,13 @@ export class LoginComponent implements OnInit {
    }
 
   ngOnInit() {
+    
     this.userName = localStorage.getItem('userName');
     this.msgRtn= null;
     this.msg = [];
     //registration page will be hidden when user clicks on login from header component
     this.comService.changeLoginParameter.subscribe(status=>{
+      this.update=false;
       this.wantToRegister= status;
       this.msg=[];
     });
@@ -51,6 +59,7 @@ export class LoginComponent implements OnInit {
   
   //user logs in
   userLogin() {
+   
     this.msg = [];   
     this.user = new User();
     this.user.username = this.userName; //get from ui
@@ -188,9 +197,48 @@ export class LoginComponent implements OnInit {
     }
   }
   
+    onToggleUpdate(id){
+    for (let i=0; i < this.updateGradeList.length; i++) {
+      if (this.updateGradeList[i].gradeId === id){
+        let check = this.updateGradeList[i].selected;
+        this.updateGradeList[i].selected = !check;
+      }
+
+    }
+  }
+  
   updateUser(){
     this.wantToRegister= undefined;
     this.update = true;
+    this.updateGradeList = JSON.parse(localStorage.getItem("gradeList"));
+  }
+  
+  userUpdateBtn(){
+     
+    this.user = new User();
+    this.user.password= this.userPasswordUpdate;
+    this.user.username= this.userNameUpdate;
+    this.user.userPostalCode= this.userPostalCodeUpdate;
+    this.user.userRole= this.update_userType;
+    this.user.gradeTutor=this.updateGradeList;
+    
+        //invoke rest service
+    this.loginService.updateUser(this.user).subscribe(
+      checkUser => {
+        this.msgRtn = checkUser;
+        this.setMessageReturned ();
+
+        //if user found save to localstorage
+        if (this.isUserRegistered  === true){
+          this.saveToLocalStorage();
+        }
+
+      },
+      error => {
+        // TODO
+      }
+    )
+    
   }
   
 }
