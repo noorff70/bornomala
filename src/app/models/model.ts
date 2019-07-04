@@ -91,7 +91,7 @@ export class User {
   userCity: string;
   postalCode: string;
   userSchool: string;
-  gradeTutor:Grade[];
+  gradeUser:Grade[];
   userRole:string;   
 }
 
@@ -104,7 +104,7 @@ export class LoggedUser {
   userCity: string;
   postalCode: string;
   userSchool: string;
-  gradeTutor:Grade[];
+  gradeUser:Grade[];
   userRole:string;   
 }
 

@@ -1,3 +1,4 @@
+import { LoggedUser } from "../../models/model";
 import { CommunicationService } from "../../services/common/communication.service";
 import { UsernameService } from "../../services/common/username.service";
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
 
   userName: string;
+  loggedUser: LoggedUser;
   
   constructor(
     private comService: CommunicationService,
@@ -31,7 +33,18 @@ export class HeaderComponent implements OnInit {
   
   retrievefromLocalStorage() {
     let key = 'userName';
-    this.userName = localStorage.getItem(key);
+    
+    this.loggedUser = JSON.parse(localStorage.getItem(key));
+    
+    if (null !== this.loggedUser) {
+      this.userName = this.loggedUser.username;
+    }
+
+    if (this.userName === null || this.userName === undefined){
+      this.userName = null
+    }
+  
+    
   }
   
   signOut() {

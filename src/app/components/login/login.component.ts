@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   loggedUser: LoggedUser;
   isUserRegistered: boolean = false;
   userName: string;
-  userPassword: string;
+  userPassword: string= "";
   userNameRegister: string;
   userPasswordRegister: string
   userPasswordRegister1: string
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   msgRtn: MessageReturned;
   msg: string[];
   userType:string;
-  tutorGradeList: Grade[];
+  userGradeList: Grade[];
   userPostalCode: string;
   
   update:boolean = false;
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     private userService: UsernameService,
     private comService: CommunicationService) 
   {
-    this.tutorGradeList=[]; 
+    this.userGradeList=[]; 
     this.setlectTutorGrades();
    }
 
@@ -54,6 +54,7 @@ export class LoginComponent implements OnInit {
       this.update=false;
       this.wantToRegister= status;
       this.msg=[];
+      this.updateGradeList=[];
     });
     
   }
@@ -66,6 +67,8 @@ export class LoginComponent implements OnInit {
     this.user = new User();
     this.user.username = this.userName; //get from ui
     this.user.password = this.userPassword; // get value from ui
+    
+    this.validateLogin();
 
     //invoke rest service
     this.loginService.login(this.user).subscribe(
@@ -73,11 +76,14 @@ export class LoginComponent implements OnInit {
         this.loggedUser = loggedUser;
 
         //if user found save to localstorage
-        if (null !== this.loggedUser){
+        if (null !== this.loggedUser.username){
           this.msgRtn.msg= "Successfully Logged in";
           this.setMessageReturned ();
           this.isUserRegistered = true;
           this.saveToLocalStorage();
+        }
+        else {
+          this.msg.push("User not exists in System")
         }
 
       },
@@ -97,7 +103,7 @@ export class LoginComponent implements OnInit {
     this.user.username = this.userNameRegister; //get from ui
     this.user.password = this.userPasswordRegister; // get value from ui
     this.user.postalCode = this.userPostalCode;
-    this.user.gradeTutor = this.tutorGradeList;
+    this.user.gradeUser = this.updateGradeList;
     this.user.userRole = this.userType;
    
     if (this.validateRegistrationInput()) {
@@ -132,9 +138,9 @@ export class LoginComponent implements OnInit {
   //save to local storage
   saveToLocalStorage() {
     let key = 'userName';
-    localStorage.setItem(key, this.userName);
+    localStorage.setItem(key, JSON.stringify(this.loggedUser));
     //show username to UI
-    this.userService.changeUserName(this.userName);
+    this.userService.changeUserName(this.loggedUser.username);
   }
   
   saveToLocalStorageRegister() {
@@ -172,7 +178,7 @@ export class LoginComponent implements OnInit {
     if (this.user.postalCode === undefined || this.user.postalCode.length === 0) {
       this.msg.push("User Postal Code Missing") ;
     }
-    if (null === this.user.gradeTutor){
+    if (null === this.user.gradeUser){
       this.msg.push("User Grade Selection Missing") ;
     }
     if (this.userPasswordRegister !== this.userPasswordRegister1) {
@@ -187,15 +193,30 @@ export class LoginComponent implements OnInit {
 
   }
   
+  validateLogin() {
+    if (null === this.userName || this.userName.length === 0) {
+      this.msg.push("User Name Missing") ;
+    }
+    if (null === this.userPassword || this.userPassword.length === 0){
+      this.msg.push("User Password Missing") ;
+    }
+    
+    if (this.msg.length === 0){
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
   setlectTutorGrades() {
-    this.tutorGradeList = JSON.parse(localStorage.getItem("gradeList"));
+    this.userGradeList = JSON.parse(localStorage.getItem("gradeList"));
   }
   
   onToggle(id){
-    for (let i=0; i < this.tutorGradeList.length; i++) {
-      if (this.tutorGradeList[i].gradeId === id){
-        let check = this.tutorGradeList[i].selected;
-        this.tutorGradeList[i].selected = !check;
+    for (let i=0; i < this.userGradeList.length; i++) {
+      if (this.userGradeList[i].gradeId === id){
+        let check = this.userGradeList[i].selected;
+        this.userGradeList[i].selected = !check;
       }
 
     }
@@ -224,7 +245,7 @@ export class LoginComponent implements OnInit {
     this.user.username= this.userNameUpdate;
     this.user.postalCode= this.userPostalCodeUpdate;
     this.user.userRole= this.update_userType;
-    this.user.gradeTutor=this.updateGradeList;
+    this.user.gradeUser=this.updateGradeList;
     
         //invoke rest service
     this.loginService.updateUser(this.user).subscribe(
