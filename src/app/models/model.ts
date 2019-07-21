@@ -33,7 +33,11 @@ export class Answer {
   type: string;
   answerOption: string;
   noOfCorrectAnswer: number;
-  answerList: string[]
+  answerList: string[];
+  didAnswered: boolean= false;
+  userTextBoxAnswer: string;
+  userTextBoxAnswerList: string[];
+  userSelectedAnswer: string;
 }
 
 export class QuestionLine {
@@ -55,7 +59,11 @@ export class Problem {
   questionLines: QuestionLine[];
   answer: Answer;
   geometryObject: any;
-  questionType: any
+  questionType: any;
+  userAnswer: string;
+  userCorrect: boolean;
+  score: number;
+  problemNumber: number;
 }
 
 export class MultipleQuestion {
@@ -105,7 +113,13 @@ export class LoggedUser {
   postalCode: string;
   userSchool: string;
   gradeUser:Grade[];
-  userRole:string;   
+  userRole:string;
+  topicList: TopicList[];   
+}
+
+export class TopicList {
+  topicId: number;
+  problemList: Problem[];
 }
 
 

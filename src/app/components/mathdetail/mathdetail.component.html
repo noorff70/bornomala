@@ -10,7 +10,7 @@
 <!-- <div [hidden]="firstPage" class="col-sm-8"> -->
 <input type="hidden" name="id_image"  id="id_image"  [(ngModel)]="imageLine" >
 
-<div *ngIf="!firstPage && !reviewPage" class="col-sm-8">
+<div *ngIf="startPracticeClicked || historicalTestClicked" class="col-sm-8">
 	<div class="control-group">
     	<span class="label label-info full-width">{{childTopic.topicDetailName}}</span>
 	</div>
@@ -23,7 +23,7 @@
 						 <app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax>  
 					</div>
 					<div>
-						<input type="text" name = "userInput" class="form-control" id="userInput" [(ngModel)]="userInput">
+						<input type="text" name = "userInput" class="form-control" id="userInput" [readonly]="!userInputEnabled" [(ngModel)]="userInput">
 					</div>
 				</div>
 				<div *ngIf="questionType == 'RADIOTYPE'">
@@ -58,7 +58,7 @@
 					<div *ngIf= "isQuestionList()">
 						<div class = "row" *ngFor="let qst of questionList; let i = index">
 							<div class="col-sm-6"><span><label><app-mathjax [inputMathJax]="questionList[i].question"></app-mathjax></label></span></div>
-							<div class="col-sm-4"><input type="text" name = "userInputs" class="form-control" id="userInputs" [(ngModel)]="userInputs[i]"></div>
+							<div class="col-sm-4"><input type="text" name = "userInputs" class="form-control" [readonly]="!userInputEnabled" id="userInputs" [(ngModel)]="userInputs[i]"></div>
 							<div class="col-sm-2" ><span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span></div>
 						</div>
 					</div>
@@ -79,14 +79,14 @@
 		<div class="panel panel-default noBorder">
 			<button type="button" class="btn btn-primary" (click)="checkAnswer()">Check</button>
 			<button type="button" class="btn btn-primary" (click)=" nextButtonOnClick()">Next</button>
+			<button type="button" class="btn btn-primary" (click)=" saveButtonOnClick()">Save</button>
 		</div>
 	</div>
 
 </div>
 
-
 <!-- <div *ngIf="!firstPage" class="col-sm-4"> -->
-<div *ngIf="!firstPage && !reviewPage" class="col-sm-4">
+<div *ngIf="startPracticeClicked || historicalTestClicked" class="col-sm-4">
 	<div class="panel-group" id="accordion">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -121,7 +121,7 @@
 
 
 
-<div *ngIf="reviewPage" >
+<div *ngIf=chapterReviewClicked >
 	<div class="control-group">
     	<span class="label label-info full-width">Chapter Review</span>
 	</div><br>
@@ -148,11 +148,13 @@
 </div>
 
 
-<div *ngIf="firstPage" class="col-sm-8">
+<div *ngIf="firstPageClicked" class="col-sm-8">
 	{{topic}}
 </div>
-<div *ngIf="firstPage && problemList != null" class="col-sm-4">
-	<button type="button" class="btn btn-primary btn-block" (click)="nextButtonOnClick()">Start  Practice</button><br>
+<div *ngIf="firstPageClicked " class="col-sm-4">
+	<button type="button" class="btn btn-primary btn-block" (click)="startPractice()">Start  Practice</button><br>
 	<br>
 	<button type="button" class="btn btn-primary btn-block" (click)="startReview()">Chapter Review</button>
+	<br>
+	<button type="button" class="btn btn-primary btn-block" (click)="startHistoryPractice()">Review Historical Test</button>
 </div>

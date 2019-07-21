@@ -1,8 +1,8 @@
-import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody} from '../../models/model';
+import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser} from '../../models/model';
 import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
 import { PagerService } from "../../services/pagerservice/pager.service";
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
-import * as $ from 'jquery';
+//import * as $ from 'jquery';
 
 @Component({
   selector: 'app-mathdetail',
@@ -23,11 +23,11 @@ export class MathdetailComponent implements OnInit {
   questionList: MultipleQuestion[];
   answerLines: any[];
   selectedAnswer: string;
+  userSelectedAnswer: string;
   answer: string;
-  displayableAnswer:string;
+  displayableAnswer: string;
   showAnswerPanel: boolean;
   correctAnswer: boolean; // correct/wrong answer
-  firstPage: boolean; // blank page with description of test and a next button.
   questionAnswered: boolean;
   topic: string;
   questionType: string;
@@ -39,10 +39,22 @@ export class MathdetailComponent implements OnInit {
   script: any;
   score: Score;
   lessonList: any[];
-  reviewPage: boolean;
   allItems: any //Lesson[];
   pagedItems: Lesson[];
-  pager: any={};
+  pager: any = {};
+  
+  startPracticeClicked: boolean;
+  chapterReviewClicked: boolean;
+  historicalTestClicked: boolean;
+  firstPageClicked: boolean; // blank page with description of test and a next button.
+  
+  loggedUser: LoggedUser;
+  cacheProblem: Problem;
+  cacheTopic: TopicList; // for caching
+  cacheProblemList: Problem[];
+ // cacheTopicList: TopicList[];
+  
+  userInputEnabled: boolean;
 
   constructor(private mathDetail: MathdetailService, 
       private elementRef: ElementRef, private pagerService: PagerService) 
@@ -57,15 +69,19 @@ export class MathdetailComponent implements OnInit {
     this.score.correct = 0;
     this.score.wrong = 0;
     this.questionAnswered = false;
+    this.cacheTopic = new TopicList();
+    this.cacheTopic.problemList= [];
+    this.cacheProblemList = [];
   }
 
   ngOnInit() {
     // initialize the first page which consists on description and a next button, 
     // so the panel is set false and first page true
     this.showAnswerPanel = false;
-    this.firstPage = true;
+    this.firstPageClicked = true;
     this.questionAnswered = false;
     this.invokeMathDetail();
+ //   this.cacheTopicList = [];
   }
 
 
@@ -76,6 +92,7 @@ export class MathdetailComponent implements OnInit {
         this.allItems = resultArray.lessonList;
         this.topic = this.problemList[0].questionHeading;
         this.setNumberOfQuestionsInTest();
+        this.saveTopicListToLocalStorage();
        // this.setPage(1);
       },
       error => {
@@ -85,36 +102,103 @@ export class MathdetailComponent implements OnInit {
   }
 
   nextButtonOnClick() {
-    this.questionAnswered = false
-    this.reviewPage = false;
-    this.questionList = [];
-    this.firstPage = false;
-    this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
-    this.answer = this.problemList[this.currentIndexToShow].answer.answer;
-    this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
-    if(null === this.displayableAnswer){
-      this.displayableAnswer = this.answer;
+
+    // cache current questions
+    this.cacheProblem = new Problem();
+
+    this.cacheTopic.topicId = this.childTopic.topicDetailsId;
+    this.cacheProblem.questionLines = this.problemList[this.currentIndexToShow].questionLines;
+    this.cacheProblem.answer = this.problemList[this.currentIndexToShow].answer;
+    this.cacheProblem.answer.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
+    this.cacheProblem.answer.didAnswered = true;
+    this.cacheProblem.answer.answerList = this.problemList[this.currentIndexToShow].answer.answerList;
+    this.cacheProblem.questionType = this.problemList[this.currentIndexToShow].questionType;
+    this.cacheProblem.problemNumber = this.problemList[this.currentIndexToShow].problemNumber;
+    this.cacheTopic.problemList.push(this.cacheProblem);
+
+    if (this.historicalTestClicked === true) {
+      this.retrieveHistory();
+      this.problemList = this.cacheProblemList;
+
+      if (typeof this.problemList[this.currentIndexToShow].answer !== undefined && this.problemList[this.currentIndexToShow].answer.didAnswered === true) {
+        this.userInputEnabled = false;
+        this.userInput = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswer;
+        this.userInputs = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswerList;
+        this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
+        this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
+
+        if (this.questionType === 'PIPLOT') {
+          this.showPiPlot = true;
+          this.loadScript();
+          this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
+
+          this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
+        } else {
+          this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
+          this.showPiPlot = false;
+        }
+
+      } else {
+        this.userInputEnabled = true;
+        this.userInput = '';
+        this.userInputs = []
+        this.questionList = [];
+      }
+
+      this.questionAnswered = false
+      
+
+
+      this.answer = this.problemList[this.currentIndexToShow].answer.answer;
+      this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
+      if (null === this.displayableAnswer) {
+        this.displayableAnswer = this.answer;
+      }
+
+      this.questionType = this.problemList[this.currentIndexToShow].questionType;
+      this.currentIndexToShow++;
+      this.showAnswerPanel = false; // will only appear when the check button is clicked
+
+      this.questionLines = [];
+
+
+      if (typeof this.problemList[this.currentIndexToShow].answer !== undefined && this.problemList[this.currentIndexToShow].answer.didAnswered === true) {
+        this.checkAnswer();
+      }
+      this.checkForMultipleQuestions();
     }
-    this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
-    this.questionType = this.problemList[this.currentIndexToShow].questionType;
-    this.currentIndexToShow++;
-    this.userInput = '';
-    this.showAnswerPanel = false; // will only appear when the check button is clicked
-    this.userInputs = []
-    this.questionLines = [];
+    else {
 
-    if (this.questionType === 'PIPLOT') {
-      this.showPiPlot = true;
-      this.loadScript();
-      this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
+      this.questionAnswered = false
+      this.questionList = [];
 
-      this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
-    } else {
-      this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
-      this.showPiPlot = false;
+      this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
+      this.answer = this.problemList[this.currentIndexToShow].answer.answer;
+      this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
+      if (null === this.displayableAnswer) {
+        this.displayableAnswer = this.answer;
+      }
+      this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
+      this.questionType = this.problemList[this.currentIndexToShow].questionType;
+      this.currentIndexToShow++;
+      this.userInput = '';
+      this.showAnswerPanel = false; // will only appear when the check button is clicked
+      this.userInputs = []
+      this.questionLines = [];
+
+      if (this.questionType === 'PIPLOT') {
+        this.showPiPlot = true;
+        this.loadScript();
+        this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
+
+        this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
+      } else {
+        this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
+        this.showPiPlot = false;
+      }
+
+      this.checkForMultipleQuestions();
     }
-
-    this.checkForMultipleQuestions();
   }
 
   loadScript() {
@@ -149,7 +233,7 @@ export class MathdetailComponent implements OnInit {
         }
       } // Single Text Box
       else if (this.userInputs.length == 0 && this.userInput != null) {
-
+        
         let userAnswer = this.removeLeadingZeros(this.userInput.trim().replace(/\s+/g, ''));
         //it has a single answer
         if (null != this.answer) {
@@ -168,7 +252,7 @@ export class MathdetailComponent implements OnInit {
           for (let m = 0; m < this.answerLines.length; m++) {
             let answer = this.answerLines[m].answerLn;
             answer = this.removeLeadingZeros(answer.replace(/\s+/g, ''));
-            //answer = answer.trim().replace(/\s+/g, '');
+  
             if (userAnswer.toUpperCase() === answer.toUpperCase()) {
               correctAnswer = true;
             }
@@ -181,17 +265,18 @@ export class MathdetailComponent implements OnInit {
             this.correctAnswer = false;
           }
         }
-
-
+        this.cacheProblem.answer.userTextBoxAnswer = this.userInput;
 
       } // else block for multiple questions
       else if (this.userInputs.length > 0) {
         this.showAnswerPanel = false;
         this.isMultipleQuestionCorrect();
+        this.cacheProblem.answer.userTextBoxAnswerList = this.userInputs;
       }
       else {
         this.score.wrong++;
         this.correctAnswer = false;
+        this.cacheProblem.answer.userTextBoxAnswerList = this.userInputs;
       }
 
       if (this.correctAnswer) {
@@ -305,9 +390,15 @@ export class MathdetailComponent implements OnInit {
   }
   
   startReview() {
+    
+    this.startPracticeClicked = false;
+    this.chapterReviewClicked = true;
+    this.historicalTestClicked = false;
+    this.firstPageClicked = false;
+    
     this.setPage(1);
-    this.reviewPage = true;
-    this.firstPage = false;
+//    this.reviewPage = true;
+    
   }
   
     ifEmptyPicturePath(obj) {
@@ -329,6 +420,160 @@ export class MathdetailComponent implements OnInit {
     return eval(str).toPrecision(10).replace(/(?:\.0+|(\.\d+?)0+)$/, "$1")
     // return str.replace(/^0+/, '');
   }
+  
+  saveTopicListToLocalStorage() {
+        
+    let found: boolean = false;
+    let key = 'userName';
+    this.loggedUser = JSON.parse(localStorage.getItem(key));
+    
+    if (null !== this.loggedUser) {
 
+      if ((typeof(this.loggedUser.topicList) !== 'undefined')){
+        for (let i = 0; i < this.loggedUser.topicList.length; i++) {
+          let topicNumber = this.loggedUser.topicList[i].topicId;
+
+          // if found don't save unless user clicks save button
+          if (topicNumber === this.childTopic.topicDetailsId) {
+            this.loggedUser.topicList[i].problemList = this.problemList;
+            found = true;
+            break;
+          }
+        }
+        if (!found) { // if not found 
+          let newTopicList = new TopicList();
+
+          newTopicList.topicId = this.childTopic.topicDetailsId;
+          newTopicList.problemList = this.problemList;
+          this.loggedUser.topicList.push(newTopicList);
+         
+        }
+      }
+      else {
+          this.loggedUser.topicList = [];
+          let newTopicList = new TopicList();
+
+          newTopicList.topicId = this.childTopic.topicDetailsId;
+          newTopicList.problemList = this.problemList;
+          this.loggedUser.topicList.push(newTopicList);
+      }
+    
+     // localStorage.setItem(key, JSON.stringify(this.loggedUser));
+
+    }
+}
+  
+  nextReview() {
+    
+    this.questionAnswered = false
+   // this.reviewPage = false;
+    this.questionList = [];
+  //  this.firstPage = false;
+    this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
+    this.answer = this.problemList[this.currentIndexToShow].answer.answer;
+    this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
+    if(null === this.displayableAnswer){
+      this.displayableAnswer = this.answer;
+    }
+    this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
+    this.questionType = this.problemList[this.currentIndexToShow].questionType;
+    this.currentIndexToShow++;
+    this.userInput = '';
+    this.showAnswerPanel = false; // will only appear when the check button is clicked
+    this.userInputs = []
+    this.questionLines = [];
+
+    if (this.questionType === 'PIPLOT') {
+      this.showPiPlot = true;
+      this.loadScript();
+      this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
+
+      this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
+    } else {
+      this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
+      this.showPiPlot = false;
+    }
+  }
+  
+  saveButtonOnClick() {
+
+    let key = 'userName';
+  //  this.loggedUser = JSON.parse(localStorage.getItem(key));
+
+    for (let i = 0; i < this.loggedUser.topicList.length; i++) {
+      let topicNumber = this.loggedUser.topicList[i].topicId; //get topic number
+
+      if (topicNumber === this.childTopic.topicDetailsId) { //if topic saved in local storage
+        
+        let tListFromLocal = this.loggedUser.topicList[i]; // find list of problems for that topic number from localstorage
+        let pListFromLocal = tListFromLocal.problemList;
+        
+        let pListFromCache = this.cacheTopic.problemList;
+        
+        // now put the cache problems to local storageList
+        for (let j=0; j<pListFromCache.length; j++ ) { // retrieve from cache. this is saved when next button pressed
+          for (let k =0; k< pListFromLocal.length; k++) {
+            if (pListFromCache[j].problemNumber === pListFromLocal[k].problemNumber){
+              pListFromLocal[k] = pListFromCache[j];
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    localStorage.setItem(key, JSON.stringify(this.loggedUser));
+
+  }
+  
+  retrieveHistory() {
+    let key = 'userName';
+    this.loggedUser = JSON.parse(localStorage.getItem(key));
+
+    if (null !== this.loggedUser) {
+      if ((typeof (this.loggedUser.topicList) !== 'undefined')) {
+        {
+
+          for (let i = 0; i < this.loggedUser.topicList.length; i++) {
+            let topicNumber = this.loggedUser.topicList[i].topicId;
+
+            // if found don't save unless user clicks save button
+            if (topicNumber === this.childTopic.topicDetailsId) {
+              this.cacheProblemList = this.loggedUser.topicList[i].problemList;
+              break;
+            }
+          }
+
+        }
+
+      }
+
+    }
+  
+  }
+  
+  startPractice() {
+    
+    this.startPracticeClicked = true;
+    this.chapterReviewClicked = false;
+    this.historicalTestClicked = false;
+    this.firstPageClicked = false;
+    
+    this.userInputEnabled = true;
+    
+    this.nextButtonOnClick();
+    
+  }
+  
+  startHistoryPractice() {
+    
+    this.startPracticeClicked = false;
+    this.chapterReviewClicked = false;
+    this.historicalTestClicked = true;
+    this.firstPageClicked = false;
+    
+    this.nextButtonOnClick();
+    
+  }
 
 }
