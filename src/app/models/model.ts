@@ -36,6 +36,7 @@ export class Answer {
   answerList: string[];
   didAnswered: boolean= false;
   userTextBoxAnswer: string;
+  userRadioButtonAnswer: string;
   userTextBoxAnswerList: string[];
   userSelectedAnswer: string;
 }

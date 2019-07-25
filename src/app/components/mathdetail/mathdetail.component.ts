@@ -1,6 +1,6 @@
 import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser} from '../../models/model';
 import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
-import { PagerService } from "../../services/pagerservice/pager.service";
+import {PagerService} from "../../services/pagerservice/pager.service";
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
 //import * as $ from 'jquery';
 
@@ -42,35 +42,33 @@ export class MathdetailComponent implements OnInit {
   allItems: any //Lesson[];
   pagedItems: Lesson[];
   pager: any = {};
-  
+
   startPracticeClicked: boolean;
   chapterReviewClicked: boolean;
   historicalTestClicked: boolean;
   firstPageClicked: boolean; // blank page with description of test and a next button.
-  
+
   loggedUser: LoggedUser;
   cacheProblem: Problem;
   cacheTopic: TopicList; // for caching
   cacheProblemList: Problem[];
- // cacheTopicList: TopicList[];
-  
+  // cacheTopicList: TopicList[]; 
   userInputEnabled: boolean;
 
-  constructor(private mathDetail: MathdetailService, 
-      private elementRef: ElementRef, private pagerService: PagerService) 
-  {
+  constructor(private mathDetail: MathdetailService,
+    private elementRef: ElementRef, private pagerService: PagerService) {
     this.questionList = [];
     this.questionLines = [];
     this.pagedItems = [];
     this.allItems = [];
     this.lessonList = [];
-    this.answerLines=[];
+    this.answerLines = [];
     this.score = new Score();
     this.score.correct = 0;
     this.score.wrong = 0;
     this.questionAnswered = false;
     this.cacheTopic = new TopicList();
-    this.cacheTopic.problemList= [];
+    this.cacheTopic.problemList = [];
     this.cacheProblemList = [];
   }
 
@@ -81,7 +79,7 @@ export class MathdetailComponent implements OnInit {
     this.firstPageClicked = true;
     this.questionAnswered = false;
     this.invokeMathDetail();
- //   this.cacheTopicList = [];
+    //   this.cacheTopicList = [];
   }
 
 
@@ -93,7 +91,7 @@ export class MathdetailComponent implements OnInit {
         this.topic = this.problemList[0].questionHeading;
         this.setNumberOfQuestionsInTest();
         this.saveTopicListToLocalStorage();
-       // this.setPage(1);
+        // this.setPage(1);
       },
       error => {
         // TODO
@@ -116,6 +114,11 @@ export class MathdetailComponent implements OnInit {
     this.cacheProblem.problemNumber = this.problemList[this.currentIndexToShow].problemNumber;
     this.cacheTopic.problemList.push(this.cacheProblem);
 
+    this.userInput = '';
+    this.userInputs = []
+    this.questionList = [];
+    this.questionLines = [];
+
     if (this.historicalTestClicked === true) {
       this.retrieveHistory();
       this.problemList = this.cacheProblemList;
@@ -124,81 +127,40 @@ export class MathdetailComponent implements OnInit {
         this.userInputEnabled = false;
         this.userInput = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswer;
         this.userInputs = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswerList;
-        this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
-        this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
-
-        if (this.questionType === 'PIPLOT') {
-          this.showPiPlot = true;
-          this.loadScript();
-          this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
-
-          this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
-        } else {
-          this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
-          this.showPiPlot = false;
-        }
-
+        this.selectedAnswer = this.problemList[this.currentIndexToShow].answer.userRadioButtonAnswer;
       } else {
         this.userInputEnabled = true;
-        this.userInput = '';
-        this.userInputs = []
-        this.questionList = [];
+
       }
-
-      this.questionAnswered = false
-      
-
-
-      this.answer = this.problemList[this.currentIndexToShow].answer.answer;
-      this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
-      if (null === this.displayableAnswer) {
-        this.displayableAnswer = this.answer;
-      }
-
-      this.questionType = this.problemList[this.currentIndexToShow].questionType;
-      this.currentIndexToShow++;
-      this.showAnswerPanel = false; // will only appear when the check button is clicked
-
-      this.questionLines = [];
-
-
-      if (typeof this.problemList[this.currentIndexToShow].answer !== undefined && this.problemList[this.currentIndexToShow].answer.didAnswered === true) {
-        this.checkAnswer();
-      }
-      this.checkForMultipleQuestions();
     }
-    else {
 
-      this.questionAnswered = false
-      this.questionList = [];
+    this.questionAnswered = false
 
-      this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
-      this.answer = this.problemList[this.currentIndexToShow].answer.answer;
-      this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
-      if (null === this.displayableAnswer) {
-        this.displayableAnswer = this.answer;
-      }
-      this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
-      this.questionType = this.problemList[this.currentIndexToShow].questionType;
-      this.currentIndexToShow++;
-      this.userInput = '';
-      this.showAnswerPanel = false; // will only appear when the check button is clicked
-      this.userInputs = []
-      this.questionLines = [];
-
-      if (this.questionType === 'PIPLOT') {
-        this.showPiPlot = true;
-        this.loadScript();
-        this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
-
-        this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
-      } else {
-        this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
-        this.showPiPlot = false;
-      }
-
-      this.checkForMultipleQuestions();
+    this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
+    this.answer = this.problemList[this.currentIndexToShow].answer.answer;
+    this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
+    if (null === this.displayableAnswer) {
+      this.displayableAnswer = this.answer;
     }
+    this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
+    this.questionType = this.problemList[this.currentIndexToShow].questionType;
+    this.currentIndexToShow++;
+
+    this.showAnswerPanel = false; // will only appear when the check button is clicked
+
+
+    if (this.questionType === 'PIPLOT') {
+      this.showPiPlot = true;
+      this.loadScript();
+      this.imageLine = JSON.stringify(this.tempQuestionLines[0].questionLn).replace(/\\/g, '');
+
+      this.tempQuestionLines = this.tempQuestionLines.slice(1, this.tempQuestionLines.length);
+    } else {
+      this.tempQuestionLines = this.tempQuestionLines.slice(0, this.tempQuestionLines.length);
+      this.showPiPlot = false;
+    }
+
+    this.checkForMultipleQuestions();
   }
 
   loadScript() {
@@ -231,9 +193,10 @@ export class MathdetailComponent implements OnInit {
           this.score.wrong++;
           this.correctAnswer = false;
         }
+        this.cacheProblem.answer.userRadioButtonAnswer = this.selectedAnswer;
       } // Single Text Box
       else if (this.userInputs.length == 0 && this.userInput != null) {
-        
+
         let userAnswer = this.removeLeadingZeros(this.userInput.trim().replace(/\s+/g, ''));
         //it has a single answer
         if (null != this.answer) {
@@ -252,7 +215,7 @@ export class MathdetailComponent implements OnInit {
           for (let m = 0; m < this.answerLines.length; m++) {
             let answer = this.answerLines[m].answerLn;
             answer = this.removeLeadingZeros(answer.replace(/\s+/g, ''));
-  
+
             if (userAnswer.toUpperCase() === answer.toUpperCase()) {
               correctAnswer = true;
             }
@@ -337,15 +300,15 @@ export class MathdetailComponent implements OnInit {
    * check user input for multiple questions
    */
   isMultipleQuestionCorrect() {
-    
-    for (let i = 0; i < this.questionList.length; i++) {
-      
-      let answer =  this.removeLeadingZeros(this.questionList[i].answer.trim().replace(/\s+/g,''));
 
-      if ( this.userInputs[i] !== undefined) {
-         let userAnswer = this.removeLeadingZeros(this.userInputs[i].trim().replace(/\s+/g,''));
-        
-      if (answer.toUpperCase() === userAnswer.toUpperCase()) {
+    for (let i = 0; i < this.questionList.length; i++) {
+
+      let answer = this.removeLeadingZeros(this.questionList[i].answer.trim().replace(/\s+/g, ''));
+
+      if (this.userInputs[i] !== undefined) {
+        let userAnswer = this.removeLeadingZeros(this.userInputs[i].trim().replace(/\s+/g, ''));
+
+        if (answer.toUpperCase() === userAnswer.toUpperCase()) {
           this.questionList[i].label = 'Correct';
           this.score.correct++;
           this.questionList[i].lookAndFeel = 'label label-success'
@@ -382,54 +345,53 @@ export class MathdetailComponent implements OnInit {
     }
   }
 
-  
+
   setPage(page: number) {
-    
+
     this.pager = this.pagerService.getPager(this.allItems.length, page);
-    this.pagedItems = this.allItems.slice(this.pager.currentPage-1, this.pager.currentPage);
+    this.pagedItems = this.allItems.slice(this.pager.currentPage - 1, this.pager.currentPage);
   }
-  
+
   startReview() {
-    
+
     this.startPracticeClicked = false;
     this.chapterReviewClicked = true;
     this.historicalTestClicked = false;
     this.firstPageClicked = false;
-    
+
     this.setPage(1);
-//    this.reviewPage = true;
-    
+    //    this.reviewPage = tr    
   }
-  
-    ifEmptyPicturePath(obj) {
-      
-      const val = (obj && (Object.keys(obj).length) === 0);
-      
-      if (val === false) {
-        return false
-      }
-        return true;
+
+  ifEmptyPicturePath(obj) {
+
+    const val = (obj && (Object.keys(obj).length) === 0);
+
+    if (val === false) {
+      return false
     }
-  
-  removeLeadingZeros(str){
+    return true;
+  }
+
+  removeLeadingZeros(str) {
     //if there is no decimal or contains a character
-    if (str.indexOf(".") === -1 || isNaN(str)===true) {
+    if (str.indexOf(".") === -1 || isNaN(str) === true) {
       return str;
     }
     //copied from stack over flow that removes leading and trailing 0s
     return eval(str).toPrecision(10).replace(/(?:\.0+|(\.\d+?)0+)$/, "$1")
     // return str.replace(/^0+/, '');
   }
-  
+
   saveTopicListToLocalStorage() {
-        
+
     let found: boolean = false;
     let key = 'userName';
     this.loggedUser = JSON.parse(localStorage.getItem(key));
-    
+
     if (null !== this.loggedUser) {
 
-      if ((typeof(this.loggedUser.topicList) !== 'undefined')){
+      if ((typeof (this.loggedUser.topicList) !== 'undefined')) {
         for (let i = 0; i < this.loggedUser.topicList.length; i++) {
           let topicNumber = this.loggedUser.topicList[i].topicId;
 
@@ -446,33 +408,33 @@ export class MathdetailComponent implements OnInit {
           newTopicList.topicId = this.childTopic.topicDetailsId;
           newTopicList.problemList = this.problemList;
           this.loggedUser.topicList.push(newTopicList);
-         
+
         }
       }
       else {
-          this.loggedUser.topicList = [];
-          let newTopicList = new TopicList();
+        this.loggedUser.topicList = [];
+        let newTopicList = new TopicList();
 
-          newTopicList.topicId = this.childTopic.topicDetailsId;
-          newTopicList.problemList = this.problemList;
-          this.loggedUser.topicList.push(newTopicList);
+        newTopicList.topicId = this.childTopic.topicDetailsId;
+        newTopicList.problemList = this.problemList;
+        this.loggedUser.topicList.push(newTopicList);
       }
-    
-     // localStorage.setItem(key, JSON.stringify(this.loggedUser));
+
+      // localStorage.setItem(key, JSON.stringify(this.loggedUser));
 
     }
-}
-  
+  }
+
   nextReview() {
-    
+
     this.questionAnswered = false
-   // this.reviewPage = false;
+    // this.reviewPage = false;
     this.questionList = [];
-  //  this.firstPage = false;
+    //  this.firstPage = false;
     this.tempQuestionLines = this.problemList[this.currentIndexToShow].questionLines;
     this.answer = this.problemList[this.currentIndexToShow].answer.answer;
     this.displayableAnswer = this.problemList[this.currentIndexToShow].answer.displayableAnswer;
-    if(null === this.displayableAnswer){
+    if (null === this.displayableAnswer) {
       this.displayableAnswer = this.answer;
     }
     this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
@@ -494,26 +456,28 @@ export class MathdetailComponent implements OnInit {
       this.showPiPlot = false;
     }
   }
-  
+
   saveButtonOnClick() {
 
+    this.checkAnswer();
+
     let key = 'userName';
-  //  this.loggedUser = JSON.parse(localStorage.getItem(key));
+    //  this.loggedUser = JSON.parse(localStorage.getItem(key));
 
     for (let i = 0; i < this.loggedUser.topicList.length; i++) {
       let topicNumber = this.loggedUser.topicList[i].topicId; //get topic number
 
       if (topicNumber === this.childTopic.topicDetailsId) { //if topic saved in local storage
-        
+
         let tListFromLocal = this.loggedUser.topicList[i]; // find list of problems for that topic number from localstorage
         let pListFromLocal = tListFromLocal.problemList;
-        
+
         let pListFromCache = this.cacheTopic.problemList;
-        
+
         // now put the cache problems to local storageList
-        for (let j=0; j<pListFromCache.length; j++ ) { // retrieve from cache. this is saved when next button pressed
-          for (let k =0; k< pListFromLocal.length; k++) {
-            if (pListFromCache[j].problemNumber === pListFromLocal[k].problemNumber){
+        for (let j = 0; j < pListFromCache.length; j++) { // retrieve from cache. this is saved when next button pressed
+          for (let k = 0; k < pListFromLocal.length; k++) {
+            if (pListFromCache[j].problemNumber === pListFromLocal[k].problemNumber) {
               pListFromLocal[k] = pListFromCache[j];
               break;
             }
@@ -525,7 +489,7 @@ export class MathdetailComponent implements OnInit {
     localStorage.setItem(key, JSON.stringify(this.loggedUser));
 
   }
-  
+
   retrieveHistory() {
     let key = 'userName';
     this.loggedUser = JSON.parse(localStorage.getItem(key));
@@ -549,31 +513,31 @@ export class MathdetailComponent implements OnInit {
       }
 
     }
-  
+
   }
-  
+
   startPractice() {
-    
+
     this.startPracticeClicked = true;
     this.chapterReviewClicked = false;
     this.historicalTestClicked = false;
     this.firstPageClicked = false;
-    
+
     this.userInputEnabled = true;
-    
+
     this.nextButtonOnClick();
-    
+
   }
-  
+
   startHistoryPractice() {
-    
+
     this.startPracticeClicked = false;
     this.chapterReviewClicked = false;
     this.historicalTestClicked = true;
     this.firstPageClicked = false;
-    
+
     this.nextButtonOnClick();
-    
+
   }
 
 }
