@@ -32,10 +32,10 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ---------------------- GRUNT Commands ---------------------------
 1. Create a ng build with the following command
-	C:\workspaces\tpcs\TPCS-Mobile>ng build --base-href=/TPCS-Mobile/
+	C:\workspaces\test\studyaid>ng build --base-href=/studyaid/
 	
 2. Create a war file using GRUNT
-	C:\workspaces\tpcs\TPCS-Mobile>grunt --gruntfile grunt-war.js war
+	C:\workspaces\test\studyaid>grunt --gruntfile grunt-war.js war
 	
 3. Deploy to local WebSphere Server and run 
-	http://localhost:9080/TPCS-Mobile
+	http://localhost:9080/studyaid
