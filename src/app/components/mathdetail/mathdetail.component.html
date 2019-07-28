@@ -31,7 +31,7 @@
 						<span><label><app-mathjax [inputMathJax]="quLine.questionLn"></app-mathjax></label></span>
 					</div>
 					<div *ngFor="let aLine of answerLines let i = index">
-						<input type="radio" name="optradio" [value]="aLine.answerLn" (change)="onSelectionChange(aLine.answerLn)"> <app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
+						<input type="radio" name="optradio" [value]="aLine.answerLn" [readonly]="!userInputEnabled"  [(ngModel)]="selectedAnswer" (change)="onSelectionChange(aLine.answerLn)"> <app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
 					</div>
 				</div>
 				<div id = "mainimage" *ngIf="questionType == 'PIPLOT'">
@@ -82,7 +82,9 @@
 			<button type="button" class="btn btn-primary" (click)=" saveButtonOnClick()">Save</button>
 		</div>
 	</div>
-
+	<div *ngIf="mReturned.success === true " class="row">
+		<span><label style="color:green; font-size:90%">{{mReturned.msg}}</label></span><br>
+	</div>
 </div>
 
 <!-- <div *ngIf="!firstPage" class="col-sm-4"> -->

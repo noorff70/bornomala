@@ -1,4 +1,4 @@
-import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser} from '../../models/model';
+import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser, MessageReturned} from '../../models/model';
 import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
 import {PagerService} from "../../services/pagerservice/pager.service";
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
@@ -54,6 +54,8 @@ export class MathdetailComponent implements OnInit {
   cacheProblemList: Problem[];
   // cacheTopicList: TopicList[]; 
   userInputEnabled: boolean;
+  
+  mReturned: MessageReturned;
 
   constructor(private mathDetail: MathdetailService,
     private elementRef: ElementRef, private pagerService: PagerService) {
@@ -100,6 +102,8 @@ export class MathdetailComponent implements OnInit {
   }
 
   nextButtonOnClick() {
+    
+    this.mReturned = new MessageReturned();
 
     // cache current questions
     this.cacheProblem = new Problem();
@@ -127,6 +131,9 @@ export class MathdetailComponent implements OnInit {
         this.userInputEnabled = false;
         this.userInput = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswer;
         this.userInputs = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswerList;
+        if (typeof this.userInputs === 'undefined' ) {
+          this.userInputs = [];
+        }
         this.selectedAnswer = this.problemList[this.currentIndexToShow].answer.userRadioButtonAnswer;
       } else {
         this.userInputEnabled = true;
@@ -161,6 +168,7 @@ export class MathdetailComponent implements OnInit {
     }
 
     this.checkForMultipleQuestions();
+    
   }
 
   loadScript() {
@@ -195,7 +203,7 @@ export class MathdetailComponent implements OnInit {
         }
         this.cacheProblem.answer.userRadioButtonAnswer = this.selectedAnswer;
       } // Single Text Box
-      else if (this.userInputs.length == 0 && this.userInput != null) {
+      else if ((this.userInputs.length == 0) && this.userInput != null) {
 
         let userAnswer = this.removeLeadingZeros(this.userInput.trim().replace(/\s+/g, ''));
         //it has a single answer
@@ -209,7 +217,7 @@ export class MathdetailComponent implements OnInit {
             this.score.wrong++;
             this.correctAnswer = false;
           }
-        } else if (null != this.answerLines) {
+        } /*else if (null != this.answerLines) {
           let correctAnswer = false;
 
           for (let m = 0; m < this.answerLines.length; m++) {
@@ -227,7 +235,7 @@ export class MathdetailComponent implements OnInit {
             this.score.wrong++;
             this.correctAnswer = false;
           }
-        }
+        }*/
         this.cacheProblem.answer.userTextBoxAnswer = this.userInput;
 
       } // else block for multiple questions
@@ -303,9 +311,9 @@ export class MathdetailComponent implements OnInit {
 
     for (let i = 0; i < this.questionList.length; i++) {
 
-      let answer = this.removeLeadingZeros(this.questionList[i].answer.trim().replace(/\s+/g, ''));
-
-      if (this.userInputs[i] !== undefined) {
+      if (this.userInputs[i] !== undefined && null !== this.userInputs[i]) {
+        
+        let answer = this.removeLeadingZeros(this.questionList[i].answer.trim().replace(/\s+/g, ''));
         let userAnswer = this.removeLeadingZeros(this.userInputs[i].trim().replace(/\s+/g, ''));
 
         if (answer.toUpperCase() === userAnswer.toUpperCase()) {
@@ -460,6 +468,8 @@ export class MathdetailComponent implements OnInit {
   saveButtonOnClick() {
 
     this.checkAnswer();
+    
+    this.mReturned = new MessageReturned();
 
     let key = 'userName';
     //  this.loggedUser = JSON.parse(localStorage.getItem(key));
@@ -487,7 +497,8 @@ export class MathdetailComponent implements OnInit {
     }
 
     localStorage.setItem(key, JSON.stringify(this.loggedUser));
-
+    this.mReturned.msg = 'Test Saved';
+    this.mReturned.success= true;
   }
 
   retrieveHistory() {
