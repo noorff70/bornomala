@@ -55,9 +55,9 @@
       
 		<div class="col form-check-inline" style="text-align:left">
             <label clss= "float-left" for="options">Select Grade :</label>
-            <label class="checkbox-inline" *ngFor="let grade of userGradeList">
-               	<input type="checkbox" [(ngModel)]="grade.checked" (change)="onToggle(grade.gradeId)">
-               		{{grade.gradeId}} 
+            <label class="checkbox-inline" *ngFor="let grades of userGradeList; let i=index">
+               	<input type="checkbox" [(ngModel)]="userGradeList[i].selected" (change)="onToggle(grades.gradeId)">
+               		{{grades.gradeId}} 
             </label>
         </div>
         
@@ -107,9 +107,9 @@
       
 		<div class="col form-check-inline" style="text-align:left">
             <label clss= "float-left" for="options">Select Grade :</label>
-            <label class="checkbox-inline" *ngFor="let grade of updateGradeList">
-               	<input type="checkbox" [(ngModel)]="grade.checked" (change)="onToggleUpdate(grade.gradeId)">
-               		{{grade.gradeId}} 
+            <label class="checkbox-inline" *ngFor="let grades of userGradeList; let i=index">
+               	<input type="checkbox" [(ngModel)]="userGradeList[i].selected" (change)="onToggle(grades.gradeId)">
+               		{{grades.gradeId}} 
             </label>
         </div>
         

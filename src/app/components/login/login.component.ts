@@ -103,8 +103,17 @@ export class LoginComponent implements OnInit {
     this.user.username = this.userNameRegister; //get from ui
     this.user.password = this.userPasswordRegister; // get value from ui
     this.user.postalCode = this.userPostalCode;
-    this.user.gradeUser = this.updateGradeList;
+    this.user.gradeUser = this.userGradeList;
     this.user.userRole = this.userType;
+    
+    if (this.userGradeList.length > 0) {
+      for (let i = 0; i < this.userGradeList.length; i++) {
+        if (this.userGradeList[i].selected !== true) {
+          this.user.gradeUser.pop();
+        }
+      }
+    }
+
    
     if (this.validateRegistrationInput()) {
 
@@ -117,9 +126,8 @@ export class LoginComponent implements OnInit {
             this.setMessageReturned();
 
             //if user found save to localstorage
-            if (this.isUserRegistered === true) {
-              this.saveToLocalStorage();
-            }
+            this.userService.changeUserName(this.user.username);
+             // this.saveToLocalStorage();
 
           },
           error => {
@@ -138,17 +146,20 @@ export class LoginComponent implements OnInit {
   //save to local storage
   saveToLocalStorage() {
     let key = 'userName';
+    //localStorage.setItem(key, JSON.stringify(this.user.username));
+    //this.loggedUser.username = this.userNameRegister;
     localStorage.setItem(key, JSON.stringify(this.loggedUser));
     //show username to UI
     this.userService.changeUserName(this.loggedUser.username);
   }
   
-  saveToLocalStorageRegister() {
+ /* saveToLocalStorageRegister() {
     let key = 'userName';
-    localStorage.setItem(key, this.userNameRegister);
+    this.loggedUser.username = this.userNameRegister;
+    localStorage.setItem(key, JSON.stringify(this.loggedUser));
     //show username to UI
     this.userService.changeUserName(this.userNameRegister);
-  }
+  }*/
   
   //user wants to register
   newRegister() {
@@ -216,7 +227,8 @@ export class LoginComponent implements OnInit {
     for (let i=0; i < this.userGradeList.length; i++) {
       if (this.userGradeList[i].gradeId === id){
         let check = this.userGradeList[i].selected;
-        this.userGradeList[i].selected = !check;
+        this.userGradeList[i].selected = check;
+        console.log();
       }
 
     }
@@ -245,7 +257,7 @@ export class LoginComponent implements OnInit {
     this.user.username= this.userNameUpdate;
     this.user.postalCode= this.userPostalCodeUpdate;
     this.user.userRole= this.update_userType;
-    this.user.gradeUser=this.updateGradeList;
+    this.user.gradeUser=this.userGradeList;
     
         //invoke rest service
     this.loginService.updateUser(this.user).subscribe(
@@ -254,10 +266,8 @@ export class LoginComponent implements OnInit {
         this.setMessageReturned ();
 
         //if user found save to localstorage
-        if (this.isUserRegistered  === true){
-          this.saveToLocalStorage();
-        }
-
+          this.userService.changeUserName(this.user.username);
+          //this.saveToLocalStorage();
       },
       error => {
         // TODO

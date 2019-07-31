@@ -33,22 +33,24 @@ export class HeaderComponent implements OnInit {
   
   retrievefromLocalStorage() {
     let key = 'userName';
-    
-    this.loggedUser = JSON.parse(localStorage.getItem(key));
-    
-    if (null !== this.loggedUser) {
-      this.userName = this.loggedUser.username;
-    }
 
-    if (this.userName === null || this.userName === undefined){
-      this.userName = null
+    if (typeof localStorage.getItem(key) !== 'undefined') {
+
+      this.loggedUser = JSON.parse(localStorage.getItem(key));
+
+      if (null !== this.loggedUser) {
+        this.userName = this.loggedUser.username;
+      }
+
+      if (this.userName === null || this.userName === undefined) {
+        this.userName = null
+      }
+
     }
-  
-    
   }
   
   signOut() {
-    localStorage.clear();
+    localStorage.removeItem('userName');
     this.userName = null;
     this.comService.changeCommScreen('<app-body></app-body>');
   }
