@@ -217,7 +217,7 @@ export class MathdetailComponent implements OnInit {
             this.score.wrong++;
             this.correctAnswer = false;
           }
-        } /*else if (null != this.answerLines) {
+        } else if (null != this.answerLines) {
           let correctAnswer = false;
 
           for (let m = 0; m < this.answerLines.length; m++) {
@@ -235,7 +235,7 @@ export class MathdetailComponent implements OnInit {
             this.score.wrong++;
             this.correctAnswer = false;
           }
-        }*/
+        }
         this.cacheProblem.answer.userTextBoxAnswer = this.userInput;
 
       } // else block for multiple questions

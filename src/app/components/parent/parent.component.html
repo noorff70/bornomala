@@ -1,28 +1,32 @@
-<div class="row">
-	<app-header></app-header>
-</div>
-<div class="row">
-	<div class="col-xs-3 single-div">
-		<app-sidenav (changeScreen) = "changeToNewScreen($event)"
-			(studentGrade) = "setStudentGrade($event)" 
-			(displayBody) = "displayChangeToBody($event)">
-		</app-sidenav>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-12">
+			<app-header></app-header>
+		</div>
 	</div>
-	<div class="col-xs-9 single-div" *ngIf="currentscreen =='<app-body></app-body>' ">
-		<app-body (changeScreen) = "changeToNewScreen($event)" 
-			(topicDetail) = "displayTopic($event)"
-			[childTopicList] = "topicList">
-		</app-body>
+	<div class="row">
+		<div class="col-sm-3">
+			<app-sidenav (changeScreen)="changeToNewScreen($event)"
+				(studentGrade)="setStudentGrade($event)"
+				(displayBody)="displayChangeToBody($event)"> </app-sidenav>
+		</div>
+		<div class="col-sm-9"
+			*ngIf="currentscreen =='<app-body></app-body>' ">
+			<app-body (changeScreen)="changeToNewScreen($event)"
+				(topicDetail)="displayTopic($event)" [childTopicList]="topicList">
+			</app-body>
+		</div>
+		<div class="col-sm-9"
+			*ngIf="currentscreen =='<app-mathdetail></app-mathdetail>' ">
+			<app-mathdetail [childTopic]="parentTopic"
+				[studentGradeinChild]="studentGrade"> </app-mathdetail>
+		</div>
+		<div class="col-sm-9"
+			*ngIf="currentscreen =='<app-login></app-login>' ">
+			<app-login></app-login>
+		</div>
 	</div>
-	<div class="col-xs-9 single-div" *ngIf="currentscreen =='<app-mathdetail></app-mathdetail>' ">
-		<app-mathdetail [childTopic] = "parentTopic"
-			[studentGradeinChild] = "studentGrade">	
-		</app-mathdetail>
+	<div class="row">
+		<app-footer></app-footer>
 	</div>
-	<div class="col-xs-9 single-div" *ngIf="currentscreen =='<app-login></app-login>' ">
-		<app-login></app-login>
-	</div>
-</div>
-<div class="row">
-	<app-footer></app-footer>
 </div>
