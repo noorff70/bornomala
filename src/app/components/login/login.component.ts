@@ -124,10 +124,9 @@ export class LoginComponent implements OnInit {
           register => {
             this.msgRtn = register;
             this.setMessageReturned();
-
-            //if user found save to localstorage
-            this.userService.changeUserName(this.user.username);
-             // this.saveToLocalStorage();
+            this.loggedUser = new LoggedUser();
+            this.loggedUser.username = this.user.username;
+            this.saveToLocalStorage();
 
           },
           error => {
@@ -145,21 +144,12 @@ export class LoginComponent implements OnInit {
   
   //save to local storage
   saveToLocalStorage() {
+    
     let key = 'userName';
-    //localStorage.setItem(key, JSON.stringify(this.user.username));
-    //this.loggedUser.username = this.userNameRegister;
     localStorage.setItem(key, JSON.stringify(this.loggedUser));
-    //show username to UI
     this.userService.changeUserName(this.loggedUser.username);
   }
   
- /* saveToLocalStorageRegister() {
-    let key = 'userName';
-    this.loggedUser.username = this.userNameRegister;
-    localStorage.setItem(key, JSON.stringify(this.loggedUser));
-    //show username to UI
-    this.userService.changeUserName(this.userNameRegister);
-  }*/
   
   //user wants to register
   newRegister() {
