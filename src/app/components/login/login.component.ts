@@ -35,6 +35,8 @@ export class LoginComponent implements OnInit {
   updateGradeList: Grade[];
   userPostalCodeUpdate:string;
   update_userType:string;
+  userCity: string;
+  userProvince: string;
 
   constructor(private loginService: LoginService,
     private userService: UsernameService,

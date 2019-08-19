@@ -2,142 +2,218 @@
 <div class="row">
 	<div class="col-sm-6" *ngIf="wantToRegister === false">
 
-		<div  class="row" >
-			<div class= "col-sm-6" style="text-align:left; font-size:120%;"> 
+		<div class="row">
+			<div class="col-sm-6" style="text-align:left; font-size:120%;">
 				<label for="colFormLabelSm">Login:</label>
 			</div>
-			<div class= "col-sm-6" style="color:blue; text-align:right; font-size:120%;"> 
-				<a href="javascript:void(0)" (click)="updateUser()"> Update Account</a>
+			<div class="col-sm-6"
+				style="color:blue; text-align:right; font-size:120%;">
+				<a href="javascript:void(0)" (click)="updateUser()"> Update
+					Account</a>
 			</div>
 		</div>
-		
+
 		<div class="row" style="text-align:left; font-size:90%;">
-			<input type="text" class="form-control" id="id_userName" name="userName" [(ngModel)]="userName" placeholder="User Name">
+			<input type="text" class="form-control" id="id_userName"
+				name="userName" [(ngModel)]="userName" placeholder="User Name">
 		</div>
-  
-		<div class= "row" style="text-align:left; font-size:90%;">
-			<input type="text" class="form-control" id="id_userPassword" name = "userPassword"  [(ngModel)]="userPassword" placeholder="Password">
+
+		<div class="row" style="text-align:left; font-size:90%;">
+			<input type="text" class="form-control" id="id_userPassword"
+				name="userPassword" [(ngModel)]="userPassword"
+				placeholder="Password">
 		</div>
 		<br>
-		
+
 		<div class="row">
-			<button type="button" class="btn btn-primary btn-block" (click)="userLogin()">Login</button>
+			<button type="button" class="btn btn-primary btn-block"
+				(click)="userLogin()">Login</button>
 		</div>
 		<div class="row">
-			<a href="javascript:void(0)" (click)="newRegister()"> Not a member? Register</a>
+			<a href="javascript:void(0)" (click)="newRegister()"> Not a
+				member? Register</a>
 		</div>
 
 	</div>
-	
 
 
-	<div class="col-sm-6" *ngIf="wantToRegister === true">
+
+	<div *ngIf="wantToRegister === true">
 		<label style="display: block;">Register</label>
-		
 
-        <div class="col">
-          		<input type="text" id="id_FirstName" name="firstName" class="form-control" placeholder="First name">
-        </div>
-        <div class="col">
-          		<input type="text" id="id_LastName" name="lastName" class="form-control" placeholder="Last name">
-        </div>
-
-      	<!-- E-mail -->
-		<input type="email" id="id_email" name="email" class="form-control sm-4" placeholder="E-mail">
-		
-		<div style="text-align:left">
-			<label>Select User Type :</label><br>
-      		<select  [(ngModel)]="userType">
-        		<option>Student</option>
-        		<option>Tutor</option>
-      		</select>
-   		</div>
-      
-		<div class="col form-check-inline" style="text-align:left">
-            <label clss= "float-left" for="options">Select Grade :</label>
-            <label class="checkbox-inline" *ngFor="let grades of userGradeList; let i=index">
-               	<input type="checkbox" [(ngModel)]="userGradeList[i].selected" (change)="onToggle(grades.gradeId)">
-               		{{grades.gradeId}} 
-            </label>
-        </div>
-        
-		<div class="col">
-			<input type="text" class="form-control" id="id_userNameRegister" name="userNameRegister" [(ngModel)]="userNameRegister" placeholder="User Name">
+		<div class=row>
+			<div class="col-sm-6">
+				<input type="text" id="id_FirstName" name="firstName"
+					class="form-control" placeholder="First name">
+			</div>
+			<div class="col-sm-6">
+				<input type="text" id="id_LastName" name="lastName"
+					class="form-control" placeholder="Last name">
+			</div>
 		</div>
-	
-		<div class="col">
-			<input type="password" class="form-control" id="id_password2" name="userPasswordRegister" [(ngModel)]="userPasswordRegister" placeholder="Password">
+		<!-- E-mail -->
+		<div class=row>
+			<div class="col-sm-12">
+				<input type="email" id="id_email" name="email" class="form-control"
+					placeholder="E-mail">
+			</div>
+		</div>
+		<div class=row>
+			<div class="col-sm-12">
+				<div style="text-align:left">
+					<label>Select User Type :</label><br> <select
+						[(ngModel)]="userType">
+						<option>Student</option>
+						<option>Tutor</option>
+					</select>
+				</div>
+			</div>
 		</div>
 
-		<div class="col">
-			<input type="password" class="form-control" id="id_password3" name="userPasswordRegister1" [(ngModel)]="userPasswordRegister1" placeholder="Retype Password">
+		<div class=row>
+			<div class="col-sm-12">
+				<div class="col form-check-inline" style="text-align:left">
+					<label clss="float-left" for="options">Select Grade :</label> <label
+						class="checkbox-inline"
+						*ngFor="let grades of userGradeList; let i=index"> <input
+						type="checkbox" [(ngModel)]="userGradeList[i].selected"
+						(change)="onToggle(grades.gradeId)"> {{grades.gradeId}}
+					</label>
+				</div>
+			</div>
 		</div>
 
-		<div class="col">
-			<input type="text" class="form-control form-control-sm" id="id_usePostal" name="userPostal" [(ngModel)]="userPostalCode" placeholder="Postal Code">
-		</div>
-		
 		<div class="row">
-			<button type="button" class="btn btn-primary btn-block" (click)=" userRegister()">Register</button>
+			<div class="col">
+				<input type="text" class="form-control" id="id_userNameRegister"
+					name="userNameRegister" [(ngModel)]="userNameRegister"
+					placeholder="User Name">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<input type="password" class="form-control" id="id_password2"
+					name="userPasswordRegister" [(ngModel)]="userPasswordRegister"
+					placeholder="Password">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<input type="password" class="form-control" id="id_password3"
+					name="userPasswordRegister1" [(ngModel)]="userPasswordRegister1"
+					placeholder="Retype Password">
+			</div>
 		</div>
 
+		<div class=row>
+			<div class="col-sm-6">
+				<div style="text-align:left">
+					<label>Select Province :</label><br> <select
+						[(ngModel)]="userProvince">
+						<option>AB</option>
+						<option>BC</option>
+						<option>ON</option>
+						<option>QC</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="col-sm-6">
+				<div style="text-align:left">
+					<label>Select City :</label><br> <select
+						[(ngModel)]="userCity">
+						<option>Student</option>
+						<option>Tutor</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col">
+				<input type="text" class="form-control form-control-sm"
+					id="id_usePostal" name="userPostal" [(ngModel)]="userPostalCode"
+					placeholder="Postal Code">
+			</div>
+		</div>
+		<div class="row">
+			<div class="row">
+				<button type="button" class="btn btn-primary btn-block"
+					(click)=" userRegister()">Register</button>
+			</div>
+		</div>
 	</div>
-	
+
 	<div class="col-sm-6" *ngIf="update === true">
 		<label style="display: block;">Update Account</label>
-		
 
-        <div class="col">
-          		<input type="text" id="id_UpdateFirstName" name="update_firstName" class="form-control" placeholder="First name">
-        </div>
-        <div class="col">
-          		<input type="text" id="id_UpdateLastName" name="update_lastName" class="form-control" placeholder="Last name">
-        </div>
 
-      	<!-- E-mail -->
-		<input type="email" id="id_UpdateEmail" name="update_email" class="form-control sm-4" placeholder="E-mail">
-		
+		<div class="col">
+			<input type="text" id="id_UpdateFirstName" name="update_firstName"
+				class="form-control" placeholder="First name">
+		</div>
+		<div class="col">
+			<input type="text" id="id_UpdateLastName" name="update_lastName"
+				class="form-control" placeholder="Last name">
+		</div>
+
+		<!-- E-mail -->
+		<input type="email" id="id_UpdateEmail" name="update_email"
+			class="form-control sm-4" placeholder="E-mail">
+
 		<div style="text-align:left">
-			<label>Select User Type :</label><br>
-      		<select  [(ngModel)]="update_userType">
-        		<option>Student</option>
-        		<option>Tutor</option>
-      		</select>
-   		</div>
-      
+			<label>Select User Type :</label><br> <select
+				[(ngModel)]="update_userType">
+				<option>Student</option>
+				<option>Tutor</option>
+			</select>
+		</div>
+
 		<div class="col form-check-inline" style="text-align:left">
-            <label clss= "float-left" for="options">Select Grade :</label>
-            <label class="checkbox-inline" *ngFor="let grades of userGradeList; let i=index">
-               	<input type="checkbox" [(ngModel)]="userGradeList[i].selected" (change)="onToggle(grades.gradeId)">
-               		{{grades.gradeId}} 
-            </label>
-        </div>
-        
-		<div class="col">
-			<input type="text" class="form-control" id="id_userNameUpdate" name="userNameUpdate" [(ngModel)]="userNameUpdate" placeholder="User Name">
-		</div>
-	
-		<div class="col">
-			<input type="password" class="form-control" id="id_password2Update" name="userPasswordUpdate" [(ngModel)]="userPasswordUpdate" placeholder="Password">
+			<label clss="float-left" for="options">Select Grade :</label> <label
+				class="checkbox-inline"
+				*ngFor="let grades of userGradeList; let i=index"> <input
+				type="checkbox" [(ngModel)]="userGradeList[i].selected"
+				(change)="onToggle(grades.gradeId)"> {{grades.gradeId}}
+			</label>
 		</div>
 
 		<div class="col">
-			<input type="password" class="form-control" id="id_password3" name="userPasswordRegister1" [(ngModel)]="userPasswordUpdate1" placeholder="Retype Password">
+			<input type="text" class="form-control" id="id_userNameUpdate"
+				name="userNameUpdate" [(ngModel)]="userNameUpdate"
+				placeholder="User Name">
 		</div>
 
 		<div class="col">
-			<input type="text" class="form-control form-control-sm" id="id_usePostal" name="userPostalUpdate" [(ngModel)]="userPostalCodeUpdate" placeholder="Postal Code">
+			<input type="password" class="form-control" id="id_password2Update"
+				name="userPasswordUpdate" [(ngModel)]="userPasswordUpdate"
+				placeholder="Password">
 		</div>
-		
+
+		<div class="col">
+			<input type="password" class="form-control" id="id_password3"
+				name="userPasswordRegister1" [(ngModel)]="userPasswordUpdate1"
+				placeholder="Retype Password">
+		</div>
+
+		<div class="col">
+			<input type="text" class="form-control form-control-sm"
+				id="id_usePostal" name="userPostalUpdate"
+				[(ngModel)]="userPostalCodeUpdate" placeholder="Postal Code">
+		</div>
+
 		<div class="row">
-			<button type="button" class="btn btn-primary btn-block" (click)=" userUpdateBtn()">Update</button>
+			<button type="button" class="btn btn-primary btn-block"
+				(click)=" userUpdateBtn()">Update</button>
 		</div>
 
 	</div>
-	
+
 	<div class="col-sm-4" *ngIf=" null !== msg">
-		<label style ="text-align:left; font-size:80%; color:red" *ngFor="let ms of msg">
-			{{ms}}<br>
+		<label style="text-align:left; font-size:80%; color:red"
+			*ngFor="let ms of msg"> {{ms}}<br>
 		</label>
 	</div>
 

@@ -47,13 +47,14 @@ export class MathdetailComponent implements OnInit {
   chapterReviewClicked: boolean;
   historicalTestClicked: boolean;
   firstPageClicked: boolean; // blank page with description of test and a next button.
+  timeTaken: any
 
   loggedUser: LoggedUser;
   cacheProblem: Problem;
   cacheTopic: TopicList; // for caching
   cacheProblemList: Problem[];
-  // cacheTopicList: TopicList[]; 
   userInputEnabled: boolean;
+  time: number= 0;
   
   mReturned: MessageReturned;
 
@@ -104,6 +105,8 @@ export class MathdetailComponent implements OnInit {
   nextButtonOnClick() {
     
     this.mReturned = new MessageReturned();
+    
+    this.clearTime();
 
     // cache current questions
     this.cacheProblem = new Problem();
@@ -168,6 +171,7 @@ export class MathdetailComponent implements OnInit {
     }
 
     this.checkForMultipleQuestions();
+    this.calculateTime();
     
   }
 
@@ -257,6 +261,7 @@ export class MathdetailComponent implements OnInit {
       }
       this.questionAnswered = true;
     }
+    this.clearTime();
   }
 
 
@@ -535,7 +540,7 @@ export class MathdetailComponent implements OnInit {
     this.firstPageClicked = false;
 
     this.userInputEnabled = true;
-
+    this.calculateTime();
     this.nextButtonOnClick();
 
   }
@@ -549,6 +554,19 @@ export class MathdetailComponent implements OnInit {
 
     this.nextButtonOnClick();
 
+  }
+  
+  calculateTime( ){
+   // this.timeTaken=0;
+    this.timeTaken = setInterval(()=> {
+      this.time++;
+    }, 1000);
+  }
+  
+  clearTime() {
+    
+    clearInterval(this.timeTaken);
+    this.time=0;
   }
 
 }

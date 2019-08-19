@@ -39,6 +39,7 @@ export class Answer {
   userRadioButtonAnswer: string;
   userTextBoxAnswerList: string[];
   userSelectedAnswer: string;
+  timeTaken: number;
 }
 
 export class QuestionLine {
