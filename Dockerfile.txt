@@ -1,0 +1,18 @@
+FROM node:alpine AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install && \
+    npm run build
+
+FROM nginx:alpine
+
+COPY --from=builder /app/dist/* /usr/share/nginx/html/
+
+
+#Run the following
+#docker build -t my-angular-app:v1 .
+#docker run -p 4200:80 my-angular-app:v1
+#http://localhost:4200"
