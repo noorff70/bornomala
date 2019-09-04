@@ -475,6 +475,13 @@ export class MathdetailComponent implements OnInit {
     this.checkAnswer();
     
     this.mReturned = new MessageReturned();
+    
+    if (null === this.loggedUser) {
+      this.mReturned.msg = 'Please login to Save';
+      this.mReturned.success= true;
+      return;
+    }
+    
 
     let key = 'userName';
     //  this.loggedUser = JSON.parse(localStorage.getItem(key));
