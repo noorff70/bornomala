@@ -57,6 +57,8 @@ export class MathdetailComponent implements OnInit {
   time: number= 0;
   
   mReturned: MessageReturned;
+  buttonDisabled: boolean= false;
+  historicalTestFound: boolean= false;
 
   constructor(private mathDetail: MathdetailService,
     private elementRef: ElementRef, private pagerService: PagerService) {
@@ -126,9 +128,27 @@ export class MathdetailComponent implements OnInit {
     this.questionList = [];
     this.questionLines = [];
 
-    if (this.historicalTestClicked === true) {
-      this.retrieveHistory();
-      this.problemList = this.cacheProblemList;
+    if (this.historicalTestClicked === true ) {
+      
+      if (null === this.loggedUser) {
+        this.mReturned.msg = 'Please login to Retrieve Historical ';
+        this.mReturned.success= true;
+        this.buttonDisabled = true;
+        return;
+      }
+      else {
+        this.retrieveHistory();
+        this.problemList = this.cacheProblemList;
+      }
+      
+      if (this.historicalTestFound === false) {
+          this.mReturned.msg = 'This test never Saved';
+          this.mReturned.success= true;
+          this.buttonDisabled = true;
+          return;
+      }
+      
+      this.buttonDisabled = false;
 
       if (typeof this.problemList[this.currentIndexToShow].answer !== undefined && this.problemList[this.currentIndexToShow].answer.didAnswered === true) {
         this.userInputEnabled = false;
@@ -527,6 +547,8 @@ export class MathdetailComponent implements OnInit {
             // if found don't save unless user clicks save button
             if (topicNumber === this.childTopic.topicDetailsId) {
               this.cacheProblemList = this.loggedUser.topicList[i].problemList;
+              this.saveButtonDIsabled = false;
+              this.historicalTestFound = true;
               break;
             }
           }
@@ -575,5 +597,7 @@ export class MathdetailComponent implements OnInit {
     clearInterval(this.timeTaken);
     this.time=0;
   }
+  
+  
 
 }

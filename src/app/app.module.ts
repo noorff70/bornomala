@@ -16,6 +16,7 @@ import { MenuService } from './services/menuservice/menu.service';
 import { MathdetailComponent } from './components/mathdetail/mathdetail.component';
 import { MathjaxComponent } from './common/mathjax/mathjax.component';
 import { LoginComponent } from "./components/login/login.component";
+import { ContactusComponent } from "./components/contactus/contactus.component";
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -28,7 +29,8 @@ import { FormsModule } from '@angular/forms';
     FooterComponent,
     MathdetailComponent,
     MathjaxComponent,
-    LoginComponent
+    LoginComponent,
+    ContactusComponent
   ],
   imports: [
     BrowserModule,

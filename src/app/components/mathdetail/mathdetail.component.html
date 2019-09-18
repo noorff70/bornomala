@@ -124,27 +124,28 @@
 						</ul>
 					</div>
 					<div class="card-body">
-						<h5 class="card-title">Hints</h5>
+						<h5 class="card-title">Time Count</h5>
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item">Time elapsed: {{time}}</li>
 						</ul>
 					</div>
-					<div class="card-body">
+		<!-- 		<div class="card-body">
 						<h5 class="card-title">Something Else</h5>
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item">Something Else</li>
 						</ul>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<!-- Left Panel for question and answer -->
 		</div>
 
 		<div class="row">
-			<button type="button" class="btn btn-primary" (click)="checkAnswer()">Check</button>
-			<button type="button" class="btn btn-primary"
+			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled" 
+				(click)="checkAnswer()">Check</button>
+			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled"
 				(click)=" nextButtonOnClick()">Next</button>
-			<button type="button" class="btn btn-primary"
+			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled"
 				(click)=" saveButtonOnClick()">Save</button>
 		</div>
 		<div *ngIf="mReturned.success === true " class="row">
@@ -192,6 +193,10 @@
 	</div>
 </div>
 
+
+<div class="spinner-border" role="status" *ngIf = "null === topic">
+  <span class="sr-only">Loading...</span>
+</div>
 
 <div *ngIf="firstPageClicked" class="col-sm-8">{{topic}}</div>
 <div *ngIf="firstPageClicked " class="col-sm-4">

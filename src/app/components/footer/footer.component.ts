@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommunicationService } from "../../services/common/communication.service";
+
 
 @Component({
   selector: 'app-footer',
@@ -7,9 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public router: Router,
+    private comService: CommunicationService) { }
 
   ngOnInit() {
   }
+  
+  contactUs() {
+    this.comService.changeCommScreen('<app-contactus></app-contactus>');
+    //this.router.navigate(['./contactus']);
+  }
+  
 
 }
