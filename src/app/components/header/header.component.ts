@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
   }
   
   retrievefromLocalStorage() {
-    let key = 'userName';
+    let key = 'user';
 
     if (typeof localStorage.getItem(key) !== 'undefined') {
 
@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
   }
   
   signOut() {
-    localStorage.removeItem('userName');
+    localStorage.removeItem('user');
     this.userName = null;
     this.comService.changeCommScreen('<app-body></app-body>');
   }

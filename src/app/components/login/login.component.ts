@@ -48,7 +48,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     
-    this.userName = localStorage.getItem('userName');
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
+    
+    if (this.loggedUser !== null ) {
+      this.userName = JSON.parse(this.loggedUser.username);
+    }
+    
     this.msgRtn= null;
     this.msg = [];
     //registration page will be hidden when user clicks on login from header component
@@ -147,7 +152,7 @@ export class LoginComponent implements OnInit {
   //save to local storage
   saveToLocalStorage() {
     
-    let key = 'userName';
+    let key = 'user';
     localStorage.setItem(key, JSON.stringify(this.loggedUser));
     this.userService.changeUserName(this.loggedUser.username);
   }

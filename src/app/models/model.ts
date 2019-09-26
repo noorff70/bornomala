@@ -40,6 +40,7 @@ export class Answer {
   userTextBoxAnswerList: string[];
   userSelectedAnswer: string;
   timeTaken: number;
+  isAnswerCorrect: number; //0- incorrect, 1- correct
 }
 
 export class QuestionLine {
@@ -116,11 +117,13 @@ export class LoggedUser {
   userSchool: string;
   gradeUser:Grade[];
   userRole:string;
-  topicList: TopicList[];   
+  topicList: TopicList[];  
+  currentTopic: number; 
 }
 
 export class TopicList {
   topicId: number;
+  completedTopic: boolean;
   problemList: Problem[];
 }
 

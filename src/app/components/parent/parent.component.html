@@ -22,6 +22,10 @@
 				[studentGradeinChild]="studentGrade"> </app-mathdetail>
 		</div>
 		<div class="col-sm-9"
+			*ngIf="currentscreen =='<app-mathhistorydetail></app-mathhistorydetail>' ">
+			<app-mathhistorydetail> </app-mathhistorydetail>
+		</div>
+		<div class="col-sm-9"
 			*ngIf="currentscreen =='<app-login></app-login>' ">
 			<app-login></app-login>
 		</div>

@@ -17,6 +17,7 @@ import { MathdetailComponent } from './components/mathdetail/mathdetail.componen
 import { MathjaxComponent } from './common/mathjax/mathjax.component';
 import { LoginComponent } from "./components/login/login.component";
 import { ContactusComponent } from "./components/contactus/contactus.component";
+import { MathhistorydetailComponent } from "./components/mathhistorydetail/mathhistorydetail.component";
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -30,7 +31,8 @@ import { FormsModule } from '@angular/forms';
     MathdetailComponent,
     MathjaxComponent,
     LoginComponent,
-    ContactusComponent
+    ContactusComponent,
+    MathhistorydetailComponent
   ],
   imports: [
     BrowserModule,

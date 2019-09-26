@@ -1,0 +1,155 @@
+<input type="hidden" name="id_image" id="id_image"
+	[(ngModel)]="imageLine">
+
+<div class="row">
+	<div class="col-sm-12"
+		*ngIf="startPracticeClicked">
+		<div class="row">
+		</div>
+
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="card">
+					<!--  Start of card -->
+					<div class="card-body">
+						<div *ngIf="questionType === 'FRACTION'">
+							<div *ngFor="let qLine of questionLines; let i = index">
+								<!-- Start Question line -->
+								<app-mathjax [inputMathJax]="qLine.questionLn"></app-mathjax>
+							</div>
+							<!-- End Question Line -->
+							<div>
+								<input type="text" class="form-control" name="userInput"
+									id="userInput" [readonly]="!userInputEnabled"
+									[(ngModel)]="userInput">
+							</div>
+						</div>
+						<!-- End of Fraction Type -->
+						<div *ngIf="questionType == 'RADIOTYPE'">
+							<!--  Radio Type -->
+							<div *ngFor="let quLine of questionLines; let i = index">
+								<span><label><app-mathjax
+											[inputMathJax]="quLine.questionLn"></app-mathjax></label></span>
+							</div>
+							<div *ngFor="let aLine of answerLines let i = index">
+								<input type="radio" name="optradio" [value]="aLine.answerLn"
+									[readonly]="!userInputEnabled" [(ngModel)]="selectedAnswer"
+									(change)="onSelectionChange(aLine.answerLn)">
+								<app-mathjax [inputMathJax]="aLine.answerLn"></app-mathjax>
+							</div>
+						</div>
+						<!-- End of Radio Type -->
+						<div id="mainimage" *ngIf="questionType == 'PIPLOT'">
+							<div id="image"></div>
+							<div *ngFor="let quLine of questionLines; let i = index">
+								<br> <span><label><app-mathjax
+											[inputMathJax]="quLine.questionLn"></app-mathjax></label></span><br>
+							</div>
+							<div *ngIf="isQuestionList()">
+								<div class="row" *ngFor="let qst of questionList; let i = index">
+									<div class="col-sm-6">
+										<span><label><app-mathjax
+													[inputMathJax]="questionList[i].question"></app-mathjax></label></span>
+									</div>
+									<div class="col-sm-4">
+										<input type="text" name="userInputs" class="form-control"
+											id="userInputs" [(ngModel)]="userInputs[i]">
+									</div>
+									<div class="col-sm-2">
+										<span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span>
+									</div>
+								</div>
+							</div>
+							<div *ngIf="!isQuestionList()">
+								<input type="text" name="userInput" class="form-control"
+									id="userInput" [(ngModel)]="userInput">
+							</div>
+						</div>
+						<!--  End of image Line -->
+						<div id="multiples" *ngIf="questionType == 'MULTIPLES'">
+							<!-- Start of multiple question -->
+							<div *ngFor="let quLine of questionLines; let i = index">
+								<br> <span><label><app-mathjax
+											[inputMathJax]="quLine.questionLn"></app-mathjax></label></span><br>
+							</div>
+							<div *ngIf="isQuestionList()">
+								<div class="row" *ngFor="let qst of questionList; let i = index">
+									<div class="col-sm-6">
+										<span><label><app-mathjax
+													[inputMathJax]="questionList[i].question"></app-mathjax></label></span>
+									</div>
+									<div class="col-sm-4">
+										<input type="text" name="userInputs" class="form-control"
+											[readonly]="!userInputEnabled" id="userInputs"
+											[(ngModel)]="userInputs[i]">
+									</div>
+									<div class="col-sm-2">
+										<span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End of Multiple Question -->
+					</div>
+					<!-- End of card body -->
+				</div>
+				<!-- End of card -->
+				<div *ngIf="showAnswerPanel" class="row">
+					<div class="col-sm-12">
+						<div class="card {{borderColor}}">
+							<div class="card-body">
+								<div class="col-sm-8">
+									<span> <app-mathjax [inputMathJax]="displayableAnswer"></app-mathjax></span>
+								</div>
+								<div *ngIf="correctAnswer" class="col-sm-8" aria-hidden="true"
+									style="color:green"></div>
+								<div *ngIf="!correctAnswer" class="col-sm-8" aria-hidden="true"
+									style="color:red"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Score</h5>
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">Correct: {{score.correct}}</li>
+							<li class="list-group-item">Incorrect: {{score.wrong}}</li>
+							<li class="list-group-item">Total: {{score.total}}</li>
+						</ul>
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Time Count</h5>
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">Time elapsed: {{time}}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- Left Panel for question and answer -->
+		</div>
+
+		<div class="row">
+			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled" 
+				(click)="checkAnswer()">Check</button>
+			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled"
+				(click)=" nextButtonOnClick()">Next</button>
+			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled"
+				(click)=" saveButtonOnClick()">Save</button>
+		</div>
+		
+	</div>
+
+
+
+</div>
+<div *ngIf="msg === true " class="row">
+			<span><label style="color:green; font-size:90%">{{mReturned.msg}}</label></span><br>
+		</div>
+
+
+<div class="spinner-border" role="status" *ngIf = "null === topic">
+  <span class="sr-only">Loading...</span>
+</div>
