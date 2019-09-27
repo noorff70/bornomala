@@ -131,9 +131,11 @@ export class LoginComponent implements OnInit {
           register => {
             this.msgRtn = register;
             this.setMessageReturned();
-            this.loggedUser = new LoggedUser();
-            this.loggedUser.username = this.user.username;
-            this.saveToLocalStorage();
+            if (this.msgRtn.success === true) {
+              this.loggedUser = new LoggedUser();
+              this.loggedUser.username = this.user.username;
+              this.saveToLocalStorage();
+            }
 
           },
           error => {

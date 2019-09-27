@@ -13,8 +13,6 @@ import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, Chan
 })
 export class MathdetailComponent implements OnInit {
 
-  //MathJax: any;
-
   @Input() childTopic: TopicDetail;
   @Input() studentGradeinChild: any;
   problemList: Problem[];
@@ -139,41 +137,6 @@ export class MathdetailComponent implements OnInit {
     this.questionList = [];
     this.questionLines = [];
 
-    if (this.historicalTestClicked === true ) {
-      
-      if (null === this.loggedUser) {
-        this.mReturned.msg = 'Please login to Retrieve Historical ';
-        this.mReturned.success= true;
-        this.buttonDisabled = true;
-        return;
-      }
-      else {
-        this.retrieveHistory();
-        this.problemList = this.cacheProblemList;
-      }
-      
-      if (this.historicalTestFound === false) {
-          this.mReturned.msg = 'This test never Saved';
-          this.mReturned.success= true;
-          this.buttonDisabled = true;
-          return;
-      }
-      
-      this.buttonDisabled = false;
-
-      if (typeof this.problemList[this.currentIndexToShow].answer !== undefined && this.problemList[this.currentIndexToShow].answer.didAnswered === true) {
-        this.userInputEnabled = false;
-        this.userInput = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswer;
-        this.userInputs = this.problemList[this.currentIndexToShow].answer.userTextBoxAnswerList;
-        if (typeof this.userInputs === 'undefined' ) {
-          this.userInputs = [];
-        }
-        this.selectedAnswer = this.problemList[this.currentIndexToShow].answer.userRadioButtonAnswer;
-      } else {
-        this.userInputEnabled = true;
-
-      }
-    }
 
     this.questionAnswered = false
 
@@ -476,6 +439,7 @@ export class MathdetailComponent implements OnInit {
     //   localStorage.setItem(key, JSON.stringify(this.loggedUser));
 
     }
+    
   }
 
   nextReview() {
@@ -632,6 +596,4 @@ export class MathdetailComponent implements OnInit {
     }
   }
   
-  
-
 }

@@ -79,7 +79,6 @@ export class MathhistorydetailComponent implements OnInit {
   ngOnInit() {
 
     this.showAnswerPanel = false;
-  //  this.firstPageClicked = true;
     this.questionAnswered = false;
     this.invokeMathDetail();
 
@@ -155,7 +154,7 @@ export class MathhistorydetailComponent implements OnInit {
     this.cacheTopic.problemList.push(this.cacheProblem);
 
  //   this.userInput = '';
-    this.userInputs = []
+ //   this.userInputs = []
     this.questionList = [];
     this.questionLines = [];
 
