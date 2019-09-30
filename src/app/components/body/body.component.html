@@ -5,11 +5,18 @@
 			<li><a href="#topic{{i}}" data-toggle="collapse"
 				aria-expanded="false" class="headingStyle">{{topic.topicName}}</a>
 				<ul class="list-unstyled" id="topic{{i}}">
-					<li *ngFor="let topicDetail of topic.topicDetail"><a
-						href="javascript:void(0)"
-						(click)="openMathDetail(topicDetail.topicDetailName, topicDetail.topicDetailsID) ">{{topicDetail.topicDetailName}}
-					</a></li>
-				</ul></li>
+					<li *ngFor="let topicDetail of topic.topicDetail">
+					<div class="row">
+						<div class="col-sm-10" >
+							<a href="javascript:void(0)" (click)="openMathDetail(topicDetail.topicDetailName, topicDetail.topicDetailsID) ">{{topicDetail.topicDetailName}}</a>
+						</div>
+						<div class="col-sm-2" *ngIf = "checkTopicCompleted(topicDetail.topicDetailsID)">
+							<i class="fas fa-check"></i>
+						</div>
+					</div>
+					</li>
+				</ul>
+			</li>
 		</ul>
 	</div>
 </div>
