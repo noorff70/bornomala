@@ -1,3 +1,5 @@
+<div id="overlay" ></div>
+
 <input type="hidden" name="id_image" id="id_image"
 	[(ngModel)]="imageLine">
 
@@ -194,18 +196,18 @@
 </div>
 
 
-<div class="spinner-border" role="status" *ngIf = "null === topic">
+<div class="spinner-border text-warning" *ngIf = "null === problemList">
   <span class="sr-only">Loading...</span>
 </div>
 
 <div *ngIf="firstPageClicked" class="col-sm-8">{{topic}}</div>
 <div *ngIf="firstPageClicked " class="col-sm-4">
-	<button type="button" class="btn btn-primary btn-block"
+	<button type="button" class="btn btn-primary btn-block" [disabled]="null === problemList"
 		(click)="startPractice()">Start Practice</button>
 	<br> <br>
-	<button type="button" class="btn btn-primary btn-block"
+	<button type="button" class="btn btn-primary btn-block" [disabled]="null === problemList"
 		(click)="startReview()">Chapter Review</button>
 	<br>
-	<button type="button" class="btn btn-primary btn-block"
+	<button type="button" class="btn btn-primary btn-block" [disabled]="null === problemList"
 		(click)="startHistoryPractice()">Review Historical Test</button>
 </div>

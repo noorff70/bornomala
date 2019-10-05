@@ -85,11 +85,13 @@ export class MathdetailComponent implements OnInit {
     this.showAnswerPanel = false;
     this.firstPageClicked = true;
     this.questionAnswered = false;
+    this.problemList = null;
     this.invokeMathDetail();
   }
 
 
   invokeMathDetail() {
+
     this.mathDetail.getMathDetail(this.childTopic.topicDetailsId, this.studentGradeinChild).subscribe(
       resultArray => {
         this.problemList = resultArray.problemList;
@@ -100,7 +102,8 @@ export class MathdetailComponent implements OnInit {
         this.saveTopicListToLocalStorage();
       },
       error => {
-        // TODO
+        console.log('Error in Rest Call');
+        this.problemList = null;
       }
     )
   }
@@ -584,5 +587,5 @@ export class MathdetailComponent implements OnInit {
 
     }
   }
-
+  
 }
