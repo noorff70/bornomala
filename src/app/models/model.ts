@@ -125,6 +125,10 @@ export class TopicList {
   topicId: number;
   completedTopic: boolean;
   problemList: Problem[];
+  total: number;
+  correct: number;
+  wrong: number;
+  unAnswered: number;
 }
 
 

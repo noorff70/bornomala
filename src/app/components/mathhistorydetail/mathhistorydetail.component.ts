@@ -17,7 +17,7 @@ export class MathhistorydetailComponent implements OnInit {
 
   @Input() childTopic: TopicDetail;
   problemList: Problem[];
-  currentIndexToShow = 0;
+  currentIndexToShow;
   tempQuestionLines: QuestionLine[];
   questionLines: QuestionLine[];
   questionList: MultipleQuestion[];
@@ -52,10 +52,15 @@ export class MathhistorydetailComponent implements OnInit {
   time: number= 0;
   
   mReturned: MessageReturned;
-  buttonDisabled: boolean= false;
+ // buttonDisabled: boolean= false;
+  checkButton: boolean;
+  saveButton: boolean;
+  nextButton: boolean;
+  
   historicalTestFound: boolean= false;
   msg: boolean;
   topicDetailId: any;
+  currentTopic: TopicList;
 
   constructor(
     private mathDetail: MathdetailService,
@@ -103,7 +108,7 @@ export class MathhistorydetailComponent implements OnInit {
       
       if (this.historicalTestFound === true) {
         this.topic = this.problemList[0].questionHeading;
-        this.setNumberOfQuestionsInTest();
+     //   this.setNumberOfQuestionsInTest();
         this.startPractice();
       }
       
@@ -114,12 +119,13 @@ export class MathhistorydetailComponent implements OnInit {
   nextButtonOnClick() {
     
     this.mReturned = new MessageReturned();
+    this.buttonStatus();
     
     if (this.currentIndexToShow >= this.problemList.length) {
         this.mReturned.msg = 'Test Complete';
         this.clearTime();
         this.msg = true;
-        this.buttonDisabled = true;
+    //    this.buttonDisabled = true;
         return; 
     }
       
@@ -153,8 +159,6 @@ export class MathhistorydetailComponent implements OnInit {
     this.cacheProblem.problemNumber = this.problemList[this.currentIndexToShow].problemNumber;
     this.cacheTopic.problemList.push(this.cacheProblem);
 
- //   this.userInput = '';
- //   this.userInputs = []
     this.questionList = [];
     this.questionLines = [];
 
@@ -169,7 +173,7 @@ export class MathhistorydetailComponent implements OnInit {
     }
     this.answerLines = this.problemList[this.currentIndexToShow].answer.answerList;
     this.questionType = this.problemList[this.currentIndexToShow].questionType;
-    this.currentIndexToShow++;
+   // this.currentIndexToShow++;
 
     this.showAnswerPanel = false; // will only appear when the check button is clicked
 
@@ -185,9 +189,11 @@ export class MathhistorydetailComponent implements OnInit {
       this.showPiPlot = false;
     }
 
+    this.currentIndexToShow++;
     this.checkForMultipleQuestions();
     this.calculateTime();
-    this.cacheProblem.answer.timeTaken = this.timeTakenToRecord;
+
+    
   }
 
   loadScript() {
@@ -207,7 +213,6 @@ export class MathhistorydetailComponent implements OnInit {
 
 
   checkAnswer() {
-    if (this.questionAnswered != true) {
 
       this.showAnswerPanel = true;
 
@@ -271,11 +276,20 @@ export class MathhistorydetailComponent implements OnInit {
 
       if (this.correctAnswer) {
         this.borderColor = 'correct';
+        this.cacheProblem.answer.isAnswerCorrect = 1;
+   //     this.cacheProblem.score++;
+        this.currentTopic.correct++;
       } else {
         this.borderColor = 'wrong';
+        this.cacheProblem.answer.isAnswerCorrect = 0;
       }
       this.questionAnswered = true;
+    
+    if ( undefined === this.problemList[this.currentIndexToShow].answer.timeTaken) {
+      this.cacheProblem.answer.timeTaken = this.timeTakenToRecord;
     }
+    
+    this.checkButton = true;
     this.clearTime();
   }
 
@@ -373,9 +387,7 @@ export class MathhistorydetailComponent implements OnInit {
     }
   }
 
-
-
-
+  
   ifEmptyPicturePath(obj) {
 
     const val = (obj && (Object.keys(obj).length) === 0);
@@ -399,7 +411,10 @@ export class MathhistorydetailComponent implements OnInit {
 
   saveButtonOnClick() {
 
-    this.checkAnswer();
+    if (!this.checkButton) {
+      this.checkAnswer();
+    }
+    
     
     this.mReturned = new MessageReturned();
     
@@ -412,7 +427,7 @@ export class MathhistorydetailComponent implements OnInit {
     let key = 'user';
 
 
-    for (let i = 0; i < this.loggedUser.topicList.length; i++) {
+  /*  for (let i = 0; i < this.loggedUser.topicList.length; i++) {
       let topicNumber = this.loggedUser.topicList[i].topicId; //get topic number
 
       if (topicNumber === this.topicDetailId) { //if topic saved in local storage
@@ -432,7 +447,7 @@ export class MathhistorydetailComponent implements OnInit {
           }
         }
       }
-    }
+    } */
 
     localStorage.setItem(key, JSON.stringify(this.loggedUser));
     this.mReturned.msg = 'Test Saved';
@@ -440,7 +455,7 @@ export class MathhistorydetailComponent implements OnInit {
   }
 
   startPractice() {
-
+    this.currentIndexToShow =0;
     this.startPracticeClicked = true;
     this.userInputEnabled = true;
     this.calculateTime();
@@ -465,16 +480,14 @@ export class MathhistorydetailComponent implements OnInit {
   }
   
   populateProblemList () {
-    
 
-    
-    
     if (null !== this.loggedUser.topicList && this.loggedUser.topicList !== undefined) {
       
       for (let i=0; i< this.loggedUser.topicList.length; i++) {
         if (this.loggedUser.topicList[i].topicId === this.topicDetailId) {
           this.problemList = this.loggedUser.topicList[i].problemList;
           this.historicalTestFound = true;
+          this.currentTopic = this.loggedUser.topicList[i];
           break;
         }
       }
@@ -488,6 +501,28 @@ export class MathhistorydetailComponent implements OnInit {
     
   }
   
+  getAnswerFmMultipleQuestions(qst) {
+
+      if (qst == undefined && null !== qst) {
+        let answer = this.removeLeadingZeros(qst.answer.trim().replace(/\s+/g, ''));
+        return answer;
+    }
+  }
   
+  buttonStatus() {
+    
+    if (this.currentIndexToShow === this.problemList.length) {
+      this.nextButton = true;
+      this.checkButton = true;
+      return;
+    } else if (this.problemList[this.currentIndexToShow].answer.didAnswered === true) {
+      this.checkButton = true;
+    } else if (this.problemList[this.currentIndexToShow].answer.didAnswered === null ||
+        this.problemList[this.currentIndexToShow].answer.didAnswered === undefined) {
+      this.checkButton = false;
+    }
+    
+  
+  }
 
 }

@@ -2,11 +2,7 @@
 	[(ngModel)]="imageLine">
 
 <div class="row">
-	<div class="col-sm-12"
-		*ngIf="startPracticeClicked">
-		<div class="row">
-		</div>
-
+	<div class="col-sm-12" *ngIf="startPracticeClicked">
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="card">
@@ -20,8 +16,11 @@
 							<!-- End Question Line -->
 							<div>
 								<input type="text" class="form-control" name="userInput"
-									id="userInput" [readonly]="!userInputEnabled"
+									id="userAnswer" [readonly]="!userInputEnabled"
 									[(ngModel)]="userInput">
+							</div>
+							<div *ngIf = "!userInputEnabled">Correct Answer: 
+								{{problemList[currentIndexToShow-1].answer.answer}}
 							</div>
 						</div>
 						<!-- End of Fraction Type -->
@@ -49,14 +48,14 @@
 								<div class="row" *ngFor="let qst of questionList; let i = index">
 									<div class="col-sm-6">
 										<span><label><app-mathjax
-													[inputMathJax]="questionList[i].question"></app-mathjax></label></span>
+													[inputMathJax]="questionList[currentIndexToShow-1].question"></app-mathjax></label></span>
 									</div>
 									<div class="col-sm-4">
 										<input type="text" name="userInputs" class="form-control"
 											id="userInputs" [(ngModel)]="userInputs[i]">
 									</div>
 									<div class="col-sm-2">
-										<span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span>
+										<span class={{questionList[currentIndexToShow-1].lookAndFeel}} name="correctSpan">{{questionList[currentIndexToShow-1].label}}</span>
 									</div>
 								</div>
 							</div>
@@ -76,15 +75,15 @@
 								<div class="row" *ngFor="let qst of questionList; let i = index">
 									<div class="col-sm-6">
 										<span><label><app-mathjax
-													[inputMathJax]="questionList[i].question"></app-mathjax></label></span>
+													[inputMathJax]="qst.question"></app-mathjax></label></span>
 									</div>
 									<div class="col-sm-4">
 										<input type="text" name="userInputs" class="form-control"
 											[readonly]="!userInputEnabled" id="userInputs"
 											[(ngModel)]="userInputs[i]">
 									</div>
-									<div class="col-sm-2">
-										<span class={{questionList[i].lookAndFeel}} name="correctSpan">{{questionList[i].label}}</span>
+									<div class="col-sm-2" *ngIf = "!userInputEnabled">
+										<span name="correctSpan">{{questionList[i].answer}}</span>
 									</div>
 								</div>
 							</div>
@@ -111,17 +110,35 @@
 				</div>
 			</div>
 			<div class="col-sm-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Score</h5>
+				<a href="#completed" class="btn btn-outline-primary btn-block"
+					data-toggle="collapse">Completed</a>
+				<div id="completed">
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">Correct: {{currentTopic.correct}}</li>
+						<li class="list-group-item">Incorrect: {{currentTopic.wrong}}
+						</li>
+						<li class="list-group-item">Unanswered:{{currentTopic.unAnswered}}</li>
+					</ul>
+				</div>
+
+				<a href="#total" class="btn btn-outline-primary btn-block"
+					data-toggle="collapse">Total Score</a>
+				<div id="total">
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item">Correct</li>
+						<li class="list-group-item">Incorrect</li>
+						<li class="list-group-item">Total</li>
+					</ul>
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Time Count</h5>
+				  	<div *ngIf = "null !== problemList[currentIndexToShow-1].answer.timeTaken &&
+				  		undefined !== problemList[currentIndexToShow-1].answer.timeTaken"> <!-- change here -->
 						<ul class="list-group list-group-flush">
-							<li class="list-group-item">Correct: {{score.correct}}</li>
-							<li class="list-group-item">Incorrect: {{score.wrong}}</li>
-							<li class="list-group-item">Total: {{score.total}}</li>
+							<li class="list-group-item">Time Taken: {{problemList[currentIndexToShow-1].answer.timeTaken}}</li>
 						</ul>
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Time Count</h5>
+				  	</div>
+					<div *ngIf = "undefined === problemList[currentIndexToShow-1].answer.timeTaken">
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item">Time elapsed: {{time}}</li>
 						</ul>
@@ -132,24 +149,24 @@
 		</div>
 
 		<div class="row">
-			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled" 
-				(click)="checkAnswer()">Check</button>
-			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled"
-				(click)=" nextButtonOnClick()">Next</button>
-			<button type="button" class="btn btn-primary" [disabled]="buttonDisabled"
-				(click)=" saveButtonOnClick()">Save</button>
+			<button type="button" class="btn btn-primary"
+				[disabled]="checkButton" (click)="checkAnswer()">Check</button>
+			<button type="button" class="btn btn-primary"
+				[disabled]="nextButton" (click)=" nextButtonOnClick()">Next</button>
+			<button type="button" class="btn btn-primary"
+				[disabled]="saveButton" (click)=" saveButtonOnClick()">Save</button>
 		</div>
-		
+
 	</div>
 
 
 
 </div>
 <div *ngIf="msg === true " class="row">
-			<span><label style="color:green; font-size:90%">{{mReturned.msg}}</label></span><br>
-		</div>
+	<span><label style="color:green; font-size:90%">{{mReturned.msg}}</label></span><br>
+</div>
 
 
-<div class="spinner-border" role="status" *ngIf = "null === topic">
-  <span class="sr-only">Loading...</span>
+<div class="spinner-border" role="status" *ngIf="null === topic">
+	<span class="sr-only">Loading...</span>
 </div>

@@ -169,7 +169,7 @@ export class MathdetailComponent implements OnInit {
 
     this.checkForMultipleQuestions();
     this.calculateTime();
-    this.cacheProblem.answer.timeTaken = this.timeTakenToRecord;
+  //  this.cacheProblem.answer.timeTaken = this.timeTakenToRecord;
   }
 
   loadScript() {
@@ -257,7 +257,11 @@ export class MathdetailComponent implements OnInit {
         this.borderColor = 'wrong';
       }
       this.questionAnswered = true;
+      this.cacheTopic.correct = this.score.correct;
+      this.cacheTopic.wrong = this.score.wrong;
+      this.cacheTopic.unAnswered = this.score.wrong;
     }
+    this.cacheProblem.answer.timeTaken = this.timeTakenToRecord;
     this.clearTime();
   }
 
@@ -490,7 +494,7 @@ export class MathdetailComponent implements OnInit {
     }
 
     // save if the problem list is finished
-      if (this.currentIndexToShow === this.problemList.length) {
+      if (this.currentIndexToShow >= this.problemList.length) {
         for (let i = 0; i < this.loggedUser.topicList.length; i++) {
           let topicNumber = this.loggedUser.topicList[i].topicId;
 
@@ -501,6 +505,21 @@ export class MathdetailComponent implements OnInit {
           }
         }
         
+      }
+    else {
+          for (let i = 0; i < this.loggedUser.topicList.length; i++) {
+            let topicNumber = this.loggedUser.topicList[i].topicId;
+
+            // if found don't save unless user clicks save button
+            if (topicNumber === this.childTopic.topicDetailsId) {
+              this.loggedUser.topicList[i].completedTopic = false;
+              this.loggedUser.topicList[i].correct = this.score.correct;
+              this.loggedUser.topicList[i].wrong = this.score.wrong;
+              this.loggedUser.topicList[i].unAnswered = this.problemList.length 
+                - this.score.correct - this.score.wrong;
+              break;
+            }
+        }
       }
 
     let key = 'user';
@@ -587,5 +606,5 @@ export class MathdetailComponent implements OnInit {
 
     }
   }
-  
+
 }

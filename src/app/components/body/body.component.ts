@@ -52,13 +52,16 @@ export class BodyComponent implements OnInit {
         if (this.topicList[i].topicId === topicId) {
           if (this.topicList[i].completedTopic === true) {
             return true;
+          } else if (this.topicList[i].completedTopic === false) {
+            return false;
           }
 
         }
       }
     }
-
-    return false;
+    else {
+      return null;
+    }
   }
   
   

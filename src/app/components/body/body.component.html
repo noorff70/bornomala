@@ -11,7 +11,10 @@
 							<a href="javascript:void(0)" (click)="openMathDetail(topicDetail.topicDetailName, topicDetail.topicDetailsID) ">{{topicDetail.topicDetailName}}</a>
 						</div>
 						<div class="col-sm-2" *ngIf = "checkTopicCompleted(topicDetail.topicDetailsID)">
-							<i class="fas fa-check"></i>
+							<i class="fas fa-check greencolor"></i>
+						</div>
+						<div class="col-sm-2" *ngIf = "checkTopicCompleted(topicDetail.topicDetailsID) == false">
+							<i class="fas fa-check orangecolor"></i>
 						</div>
 					</div>
 					</li>
