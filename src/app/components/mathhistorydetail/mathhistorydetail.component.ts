@@ -448,6 +448,9 @@ export class MathhistorydetailComponent implements OnInit {
         }
       }
     } */
+    
+    if (this.problemList.length === this.currentIndexToShow)
+      this.currentTopic.completedTopic = true;
 
     localStorage.setItem(key, JSON.stringify(this.loggedUser));
     this.mReturned.msg = 'Test Saved';
