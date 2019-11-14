@@ -185,9 +185,9 @@ export class LoginComponent implements OnInit {
     if (this.user.password === undefined) {
       this.msg.push("User Password Missing") ;
     }
-    if (this.user.postalCode === undefined || this.user.postalCode.length === 0) {
-      this.msg.push("User Postal Code Missing") ;
-    }
+  //  if (this.user.postalCode === undefined || this.user.postalCode.length === 0) {
+  //    this.msg.push("User Postal Code Missing") ;
+  //  }
     if (null === this.user.gradeUser){
       this.msg.push("User Grade Selection Missing") ;
     }

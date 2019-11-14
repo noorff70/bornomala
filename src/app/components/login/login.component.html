@@ -104,7 +104,7 @@
 					placeholder="Retype Password">
 			</div>
 		</div>
-
+<!--  
 		<div class=row>
 			<div class="col-sm-6">
 				<div style="text-align:left">
@@ -119,7 +119,7 @@
 			</div>
 
 
-			<div class="col-sm-6">
+		 <div class="col-sm-6">
 				<div style="text-align:left">
 					<label>Select City :</label><br> <select
 						[(ngModel)]="userCity">
@@ -138,12 +138,13 @@
 					placeholder="Postal Code">
 			</div>
 		</div>
+		-->
+
 		<div class="row">
-			<div class="row">
-				<button type="button" class="btn btn-primary btn-block"
-					(click)=" userRegister()">Register</button>
-			</div>
+			<button type="button" class="btn btn-primary btn-block"
+				(click)=" userRegister()">Register</button>
 		</div>
+	
 	</div>
 
 	<div class="col-sm-6" *ngIf="update === true">

@@ -196,11 +196,13 @@ export class MathdetailComponent implements OnInit {
       // Radio Button
       if (this.selectedAnswer != null) {
         if (this.selectedAnswer === this.answer) {
-          this.correctAnswer = true;
-          this.score.correct++;
+          this.recordCorrectScore();
+          //this.correctAnswer = true;
+          //this.score.correct++;
         } else {
-          this.score.wrong++;
-          this.correctAnswer = false;
+          this.recordIncorrectScore();
+          //this.score.wrong++;
+          //this.correctAnswer = false;
         }
         this.cacheProblem.answer.userRadioButtonAnswer = this.selectedAnswer;
       } // Single Text Box
@@ -212,11 +214,13 @@ export class MathdetailComponent implements OnInit {
           let answer = this.removeLeadingZeros(this.answer.trim().replace(/\s+/g, ''));
 
           if (answer.toUpperCase() === userAnswer.toUpperCase()) {
-            this.score.correct++;
-            this.correctAnswer = true;
+            this.recordCorrectScore();
+           // this.score.correct++;
+           // this.correctAnswer = true;
           } else {
-            this.score.wrong++;
-            this.correctAnswer = false;
+            this.recordIncorrectScore();
+            //this.score.wrong++;
+            //this.correctAnswer = false;
           }
         } else if (null != this.answerLines) {
           let correctAnswer = false;
@@ -230,11 +234,13 @@ export class MathdetailComponent implements OnInit {
             }
           }
           if (correctAnswer) {
-            this.score.correct++;
-            this.correctAnswer = true;
+            this.recordCorrectScore();
+            //this.score.correct++;
+            //this.correctAnswer = true;
           } else {
-            this.score.wrong++;
-            this.correctAnswer = false;
+            this.recordIncorrectScore()
+            //this.score.wrong++;
+            //this.correctAnswer = false;
           }
         }
         this.cacheProblem.answer.userTextBoxAnswer = this.userInput;
@@ -246,15 +252,16 @@ export class MathdetailComponent implements OnInit {
         this.cacheProblem.answer.userTextBoxAnswerList = this.userInputs;
       }
       else {
-        this.score.wrong++;
-        this.correctAnswer = false;
+        this.recordIncorrectScore();
+        //this.score.wrong++;
+        //this.correctAnswer = false;
         this.cacheProblem.answer.userTextBoxAnswerList = this.userInputs;
       }
 
       if (this.correctAnswer) {
-        this.borderColor = 'correct';
+       // this.borderColor = 'correct';
       } else {
-        this.borderColor = 'wrong';
+       // this.borderColor = 'wrong';
       }
       this.questionAnswered = true;
       this.cacheTopic.correct = this.score.correct;
@@ -605,6 +612,20 @@ export class MathdetailComponent implements OnInit {
       localStorage.setItem('user', JSON.stringify(this.loggedUser));
 
     }
+  }
+  
+  recordCorrectScore() {
+    this.correctAnswer = true;
+    this.score.correct++;
+    this.cacheProblem.answer.isAnswerCorrect = 1;
+    this.borderColor = 'correct';
+  }
+  
+  recordIncorrectScore() {
+    this.score.wrong++;
+    this.correctAnswer = false;
+    this.cacheProblem.answer.isAnswerCorrect = 0;
+    this.borderColor = 'wrong';
   }
 
 }
