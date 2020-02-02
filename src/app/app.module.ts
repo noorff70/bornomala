@@ -13,11 +13,12 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { MenuService } from './services/menuservice/menu.service';
-import { MathdetailComponent } from './components/mathdetail/mathdetail.component';
+import { MathdetailComponent } from './components/math/mathdetail/mathdetail.component';
 import { MathjaxComponent } from './common/mathjax/mathjax.component';
 import { LoginComponent } from "./components/login/login.component";
 import { ContactusComponent } from "./components/contactus/contactus.component";
-import { MathhistorydetailComponent } from "./components/mathhistorydetail/mathhistorydetail.component";
+import { MathbotComponent } from "./components/bots/mathbot/mathbot.component";
+import { MathhistorydetailComponent } from "./components/math/mathhistorydetail/mathhistorydetail.component";
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -32,7 +33,8 @@ import { FormsModule } from '@angular/forms';
     MathjaxComponent,
     LoginComponent,
     ContactusComponent,
-    MathhistorydetailComponent
+    MathhistorydetailComponent,
+    MathbotComponent
   ],
   imports: [
     BrowserModule,

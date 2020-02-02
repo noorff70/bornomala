@@ -1,8 +1,9 @@
-import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser, MessageReturned} from '../../models/model';
-import {CommunicationService} from "../../services/common/communication.service";
-import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
-import {PagerService} from "../../services/pagerservice/pager.service";
+import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser, MessageReturned} from '../../../models/model';
+import {CommunicationService} from "../../../services/common/communication.service";
+import {MathdetailService} from '../../../services/mathdetail/mathdetail.service';
+import {PagerService} from "../../../services/pagerservice/pager.service";
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
+import { Router } from '@angular/router';
 //import * as $ from 'jquery';
 
 @Component({
@@ -44,7 +45,6 @@ export class MathdetailComponent implements OnInit {
 
   startPracticeClicked: boolean;
   chapterReviewClicked: boolean;
-  historicalTestClicked: boolean;
   firstPageClicked: boolean; // blank page with description of test and a next button.
   timeTaken: any
   timeTakenToRecord: number;
@@ -59,11 +59,17 @@ export class MathdetailComponent implements OnInit {
   mReturned: MessageReturned;
   buttonDisabled: boolean = false;
   historicalTestFound: boolean = false;
+  
+ // chatbotModal: boolean;
+  askBot: any;
+  answerBot: any;
+  chatBotMsgs: string[];
 
   constructor(private mathDetail: MathdetailService,
     private elementRef: ElementRef,
     private pagerService: PagerService,
-    private comService: CommunicationService) {
+    private comService: CommunicationService,
+    public router: Router) {
     this.questionList = [];
     this.questionLines = [];
     this.pagedItems = [];
@@ -77,6 +83,10 @@ export class MathdetailComponent implements OnInit {
     this.cacheTopic = new TopicList();
     this.cacheTopic.problemList = [];
     this.cacheProblemList = [];
+  //  this.chatbotModal = false;
+    this.chatBotMsgs = [];
+    this.askBot = '';
+    this.answerBot = 'How can I help you?';
   }
 
   ngOnInit() {
@@ -87,6 +97,7 @@ export class MathdetailComponent implements OnInit {
     this.questionAnswered = false;
     this.problemList = null;
     this.invokeMathDetail();
+    this.chatBotMsgs.push(this.answerBot);
   }
 
 
@@ -169,7 +180,6 @@ export class MathdetailComponent implements OnInit {
 
     this.checkForMultipleQuestions();
     this.calculateTime();
-  //  this.cacheProblem.answer.timeTaken = this.timeTakenToRecord;
   }
 
   loadScript() {
@@ -197,12 +207,8 @@ export class MathdetailComponent implements OnInit {
       if (this.selectedAnswer != null) {
         if (this.selectedAnswer === this.answer) {
           this.recordCorrectScore();
-          //this.correctAnswer = true;
-          //this.score.correct++;
         } else {
           this.recordIncorrectScore();
-          //this.score.wrong++;
-          //this.correctAnswer = false;
         }
         this.cacheProblem.answer.userRadioButtonAnswer = this.selectedAnswer;
       } // Single Text Box
@@ -215,12 +221,8 @@ export class MathdetailComponent implements OnInit {
 
           if (answer.toUpperCase() === userAnswer.toUpperCase()) {
             this.recordCorrectScore();
-           // this.score.correct++;
-           // this.correctAnswer = true;
           } else {
             this.recordIncorrectScore();
-            //this.score.wrong++;
-            //this.correctAnswer = false;
           }
         } else if (null != this.answerLines) {
           let correctAnswer = false;
@@ -235,12 +237,8 @@ export class MathdetailComponent implements OnInit {
           }
           if (correctAnswer) {
             this.recordCorrectScore();
-            //this.score.correct++;
-            //this.correctAnswer = true;
           } else {
             this.recordIncorrectScore()
-            //this.score.wrong++;
-            //this.correctAnswer = false;
           }
         }
         this.cacheProblem.answer.userTextBoxAnswer = this.userInput;
@@ -253,16 +251,14 @@ export class MathdetailComponent implements OnInit {
       }
       else {
         this.recordIncorrectScore();
-        //this.score.wrong++;
-        //this.correctAnswer = false;
         this.cacheProblem.answer.userTextBoxAnswerList = this.userInputs;
       }
-
+/*
       if (this.correctAnswer) {
        // this.borderColor = 'correct';
       } else {
        // this.borderColor = 'wrong';
-      }
+      }*/
       this.questionAnswered = true;
       this.cacheTopic.correct = this.score.correct;
       this.cacheTopic.wrong = this.score.wrong;
@@ -381,7 +377,7 @@ export class MathdetailComponent implements OnInit {
     } else {
       this.startPracticeClicked = false;
       this.chapterReviewClicked = true;
-      this.historicalTestClicked = false;
+     // this.historicalTestClicked = false;
       this.firstPageClicked = false;
 
       this.setPage(1);
@@ -567,7 +563,6 @@ export class MathdetailComponent implements OnInit {
 
     this.startPracticeClicked = true;
     this.chapterReviewClicked = false;
-    this.historicalTestClicked = false;
     this.firstPageClicked = false;
 
     this.userInputEnabled = true;
@@ -582,7 +577,7 @@ export class MathdetailComponent implements OnInit {
 
     this.startPracticeClicked = false;
     this.chapterReviewClicked = false;
-    this.historicalTestClicked = true;
+  //  this.historicalTestClicked = true;
     this.firstPageClicked = false;
 
     this.nextButtonOnClick();
@@ -626,6 +621,24 @@ export class MathdetailComponent implements OnInit {
     this.correctAnswer = false;
     this.cacheProblem.answer.isAnswerCorrect = 0;
     this.borderColor = 'wrong';
+  }
+  
+  callMathbot() {
+   
+    this.mathDetail.getMathbotAnswer(this.askBot).subscribe(
+      answer => {
+        this.chatBotMsgs.push(this.askBot);
+        this.chatBotMsgs.push(JSON.stringify(answer));
+      },
+      error => {
+        console.log('Error in Rest Call');
+      }
+    )
+    console.log('returned from chat');
+  }
+  
+  cancelMathbot() {
+   // this.chatBotMsgs = null;
   }
 
 }

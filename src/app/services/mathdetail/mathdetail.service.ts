@@ -23,6 +23,19 @@ export class MathdetailService {
       .catch(this.handleError);
 
   }
+  
+    getMathbotAnswer(question: string): Observable<any> {
+      
+    const MathbotQuestion = { question: question};
+
+    return this.http.post('http://localhost:8080/lbmp/mathAssistant',  MathbotQuestion)
+      .map((res: Response) => {
+        console.log(res.json());
+        return res.json();
+      })
+      .catch(this.handleError);
+
+  }
 
   handleError(error: Response) {
     return Observable.throw(error.json().error || 'Server error');

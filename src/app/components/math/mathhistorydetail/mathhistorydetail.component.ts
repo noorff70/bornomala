@@ -1,7 +1,7 @@
-import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser, MessageReturned} from '../../models/model';
-import { CommunicationService } from "../../services/common/communication.service";
-import {MathdetailService} from '../../services/mathdetail/mathdetail.service';
-import {PagerService} from "../../services/pagerservice/pager.service";
+import {TopicDetail, Problem, QuestionLine, AnswerLine, MultipleQuestion, Score, Lesson, LessonBody, TopicList, LoggedUser, MessageReturned} from '../../../models/model';
+import { CommunicationService } from "../../../services/common/communication.service";
+import {MathdetailService} from '../../../services/mathdetail/mathdetail.service';
+import {PagerService} from "../../../services/pagerservice/pager.service";
 import {Component, OnInit, Input, ElementRef, OnDestroy, ViewChild, NgZone, ChangeDetectorRef} from '@angular/core';
 
 
